@@ -1,0 +1,37 @@
+### Dataset name. No spaces, no '='.
+DATASET_NAME=MY_113
+
+### Name of output direcotry. No spaces, no '='
+OUT_DIR=/home/jurici/work/PLACseq/MAPS_pipe/results/mESC/
+
+### MACS2 file path. No spaces, no '='.
+MACS2_PATH=/home/jurici/work/PLACseq/analysis/binning_for_regression/new_set/final.replicated.narrowPeak
+
+### genomic feature file path. No spaces, no '='.
+GF_PATH=/home/jurici/work/PLACseq/data/genomic_features/F_GC_M_MboI_5Kb_el.mm10.txt
+
+### long.bedpe file path. No spaces, no '='.
+## LONG_PATH=/home/jurici/work/PLACseq/data/mouse_tissue/
+LONG_PATH=/home/abnousa/software/feather/pipeline_output/MY_113/
+
+### long.bedpe file name format. No spaces, no '='.
+LONG_FORMAT=[DATASET_NAME].[CHROMOSOME].long.intra.bedpe
+
+### short.bed file path. No spaces, no '='.
+SHORT_PATH=/home/abnousa/software/feather/pipeline_output/MY_113/
+
+### short.bedpe file name format. No spaces, no '='.
+SHORT_FORMAT=[DATASET_NAME].[CHROMOSOME].shrt.vip.bed
+
+### Bin size.
+BIN_SIZE=5000
+
+## Bin range.
+BINNING_RANGE=1000000
+
+## number of chromosomes
+N_CHROMS=19
+
+
+
+

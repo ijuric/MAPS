@@ -1,0 +1,116 @@
+
+import argparse
+import subprocess
+import pysam
+import pybedtools
+import os
+from tempfile import TemporaryFile
+
+threads = 2
+mapq = 30
+max_mem = "1G"
+fastq1 = ""
+fastq2 = ""
+bwa_index = ""
+outdir = ""
+genome = ""
+re_pattern = ""
+prefix = ""
+length_threshold = 1000
+split_filename = ""
+per_chr_bedpe = "1"
+generate_hic = "1"
+
+def main():
+	parser = setup_arg_parsers()
+	parse_args(parser)
+	print(outdir)
+	print(fastq1)
+	print(fastq2)
+	print(mapq)
+	if not os.path.exists(outdir):
+		os.makedirs(outdir)
+	if cmd == "filter":
+		from feather_filter_chr import filter_main
+		filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, max_mem, to_file = True)
+		#write_bam_from_samstr(filter_output_sam, outdir + "/" + prefix + ".pairs.filtered.bam")
+		#proc = subprocess.Popen(["samtools", "view", "-bh"],# "-o", outdir + "/" + prefix + ".pairs.filtered.bam"],
+		#	stdin = input_tempfile, stdout = subprocess.PIPE)
+		#bam_output = proc.communicate()[0]
+		#with open(outdir + "/" + prefix + "paired.filtered.bam", "wb") as f:
+		#	f.write(bam_output)
+	elif cmd == "split":
+		from feather_split_rongxin import split_main
+		split_main(split_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic)
+	elif cmd == "preprocess":
+		from feather_filter_chr import filter_main
+		from feather_split_rongxin import split_main
+		#filter_output_filename = filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, max_mem, to_file = False)
+		filter_output_filename =  outdir + "/" + prefix + ".paired" + ".srtn.rmdup.bam"
+		split_main(filter_output_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic)
+
+def parse_args(parser):
+	args = parser.parse_args()
+	for arg in (args.__dict__):
+		val =  args.__dict__[arg]
+		if val != None:
+			globals().update({arg: val})
+
+def setup_arg_parsers():
+	parser = argparse.ArgumentParser()
+	subparsers = parser.add_subparsers(dest = "cmd", 
+					description = "valid processing subcommands. One subcommand has " +
+							"to be entered to run the program",
+					help = "run each with -h for command-specific help")
+	subparsers.required = True
+	parent_parser = argparse.ArgumentParser(add_help=False)
+	parent_parser.add_argument("-o", "--outdir", help = "output directory", required=True)
+	parent_parser.add_argument("-p", "--prefix", help = "prefix for the output files")
+	filter_parser = subparsers.add_parser("filter", help = "run bwa or start from two bam files and filter them",
+						parents = [parent_parser])
+	set_filter_parser_args(filter_parser)
+	split_parser = subparsers.add_parser("split", help = "split a bam by contact length threshold",
+						parents = [parent_parser])
+	set_split_parser_args(split_parser)
+	preproc_parser = subparsers.add_parser("preprocess", help = "run preprocessing, starting from two fastq/bam" + 
+						"files to two short and long bedpe files",
+						parents = [parent_parser])
+	set_preproc_parser_args(preproc_parser)
+	return (parser)
+
+def set_filter_parser_args(parser):
+	parser.add_argument("-f1", "--fastq1", help = "first fasta/bam file", required = True)
+	parser.add_argument("-f2", "--fastq2", help = "second fasta/bam file", required = True)
+	parser.add_argument("-b", "--bwa-index", help = "genome index for running bwa")
+	parser.add_argument("-q", "--mapq", help = "MAPQ threshold", type = int)
+	parser.add_argument("-t", "--threads", help = "number of threads to use", type = int)
+	parser.add_argument("-m", "--max-mem", help = "Maximum memory available per thread")
+	parser.add_argument("-j", "--generate-hic", help = "Generate .hic file", type = str2bool, nargs = '?', const = True, default = generate_hic)
+
+def set_split_parser_args(parser):
+	parser.add_argument("-l", "--length-threshold", help = "length threshold for long/short splitting", type = int)
+	parser.add_argument("-s", "--split-filename", help = "bam or sam file that needs to be split")
+	parser.add_argument("-c", "--per-chr-bedpe", help = "generate one bedpe file for each chromosome", 
+				type = str2bool, nargs = '?', const = True, default = "t")
+
+def set_preproc_parser_args(parser):
+	parser.add_argument("-f1", "--fastq1", help = "first fasta/bam file", required = True)
+	parser.add_argument("-f2", "--fastq2", help = "second fasta/bam file", required = True)
+	parser.add_argument("-b", "--bwa-index", help = "genome index for running bwa")
+	parser.add_argument("-q", "--mapq", help = "MAPQ threshold", type = int)
+	parser.add_argument("-l", "--length-threshold", help = "length threshold for long/short splitting", type = int)
+	parser.add_argument("-t", "--threads", help = "number of threads to use", type = int)
+	parser.add_argument("-m", "--max-mem", help = "Maximum memory available per thread")
+	parser.add_argument("-c", "--per-chr-bedpe", help = "generate one bedpe file for each chromosome",
+				type = str2bool, nargs = '?', const = True, default = per_chr_bedpe)
+	parser.add_argument("-j", "--generate-hic", help = "Generate .hic file",  type = str2bool, nargs = '?', const = True, default = generate_hic)
+
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+main()
