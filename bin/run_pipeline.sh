@@ -99,17 +99,17 @@ if [ $feather -eq 1 ]; then
 			#printf '%s\n' "${hic_array[@]}"
 			printf '%s\n' "${qc_array[@]}"
 		done
-		./feather/concat_bedfiles.sh $feather_output $dataset_name "${ds_array[@]}"
+		$cwd/feather/concat_bedfiles.sh $feather_output $dataset_name "${ds_array[@]}"
 		qc_filename=$feather_output/$dataset_name".feather.qc"
 		awk '{a[FNR]=$1; b[FNR]+=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) print a[i], b[i], c[i]}' "${qc_array[@]}" > $qc_filename".tsv"
 		sed -i 's/ /\t/g' $qc_filename".tsv"
 		if [ $generate_hic -eq 1 ]; then
 			echo "$feather_output/$hic_dir"
 			mkdir -p $feather_output"/"$hic_dir
-			./feather/concat_hic.sh  $feather_output $dataset_name $hic_dir "${hic_array[@]}"
+			$cwd/feather/concat_hic.sh  $feather_output $dataset_name $hic_dir "${hic_array[@]}"
 		fi
 	else
-		$python_path feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic
+		$python_path $cwd/feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic
 		qc_filename=$feather_output/$dataset_name".feather.qc"
 		temp_qc_file=$feather_output/tempfiles/$dataset_name".feather.qc.modified"
 		#printf "dataset name:\t"$dataset_name"\n" >> $qc_filename
@@ -118,7 +118,7 @@ if [ $feather -eq 1 ]; then
 		sed -r -i 's/ /\_/g' $temp_qc_file
 		cut -f 1-2 $temp_qc_file > $temp_qc_file".cut"
 		sed -i 's/\_$//g' $temp_qc_file".cut"
-		paste -d"\t" feather/qc_template.txt $temp_qc_file".cut" > $temp_qc_file".cut.tmp"
+		paste -d"\t" $cwd/feather/qc_template.txt $temp_qc_file".cut" > $temp_qc_file".cut.tmp"
 		awk '{print $1,$3,$2}' $temp_qc_file".cut.tmp" >> $qc_filename".tsv"
 		sed -i 's/ /\t/g' $qc_filename".tsv"
 		#awk '{printf("%s\t", $1)}' $temp_qc_file".cut" > $qc_filename".tsv"
@@ -133,11 +133,11 @@ fi
 if [ $maps -eq 1 ]; then
 	mkdir -p $maps_output
 	echo "$dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output"
-	$python_path ./MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output
+	$python_path $cwd/MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output
 	echo "first"
-	$python_path ./MAPS/MAPS.py $maps_output"maps_"$dataset_name".maps"
+	$python_path $cwd/MAPS/MAPS.py $maps_output"maps_"$dataset_name".maps"
 	echo "second"
-	$Rscript_path ./MAPS/MAPS_regression_and_peak_caller.r $maps_output $dataset_name"."$resolution"k" $bin_size $chr_count $filter_file
+	$Rscript_path $cwd/MAPS/MAPS_regression_and_peak_caller.r $maps_output $dataset_name"."$resolution"k" $bin_size $chr_count $filter_file
 	echo "third"
 	cp "$(readlink -f $0)" $maps_output"/execution_script_copy"
 	chmod 777 $maps_output
