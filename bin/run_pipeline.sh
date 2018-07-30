@@ -1,5 +1,5 @@
 #!/bin/bash
-python_path=/home/abnousa/software/python3.6.5/bin/python #should have pysam, pybedtools installed.bedtools, samtools should be in the path
+python_path=/home/abnousa/software/python3.6.5/bin/python #should have pysam, pybedtools installed. bedtools, samtools should be in the path
 Rscript_path=/opt/R-3.4.3/lib64/R/bin/Rscript
 ###################################################################
 feather=0 #start from feather or run only MAPS
@@ -15,8 +15,9 @@ bwa_index=""
 bin_size=5000
 filter_file="None"
 generate_hic=1
-hic_dir="tempfiles/hic_tempfiles"
-cwd="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+mapq=30
+length_cutoff=1000
+threads=8
 ####################################################################
 ###SET THE VARIABLES AT THIS PORTION ONLY IF 
 ### number_of_datasets > 1 (merging exisitng datasets)
@@ -35,13 +36,12 @@ fastq1=$fastq_dir/$dataset_name"_R1"$fastq_format
 fastq2=$fastq_dir/$dataset_name"_R2"$fastq_format
 feather_output=$outdir"/feather_output/"$dataset_name"_"$DATE
 feather_output_symlink=$outdir"/feather_output/"$dataset_name"_current"
-mapq=30
-length_cutoff=1000
-threads=8
 resolution=$(bc <<< "$bin_size/1000")
 per_chr='True' # set this to zero if you don't want per chromosome output bed and bedpe files
 feather_logfile=$feather_output"/"$dataset_name".feather.log"
 resolution=$(bc <<< "$bin_size/1000")
+cwd="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+hic_dir="tempfiles/hic_tempfiles"
 if [ $organism == "mm10" ]; then
 	if [ -z $bwa_index ]; then
         	bwa_index="/home/jurici/MAPS/MAPS_data_files/"$organism"/BWA_index/mm10_chrAll.fa"
