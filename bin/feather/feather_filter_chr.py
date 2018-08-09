@@ -49,12 +49,12 @@ def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_fil
 	for bwa_filename, bwa_sorted_filename in ([bwa1_filename, bwa1_sorted_filename], [bwa2_filename, bwa2_sorted_filename]):
 		bwa = pysam.AlignmentFile(bwa_filename)
 		if not is_sorted_queryname(bwa.header):
-			print(time.ctime() + " calling samtools sort for " + bwa_filename)
+			print(time.ctime() + " calling samtools sort for " + bwa_filename + " storing in " + bwa_sorted_filename)
 			pysam.sort("-o", bwa_sorted_filename , "-n", "-@", str(threads), bwa_filename)
 		else:
 			copyfile(bwa_filename, bwa_sorted_filename)
-	print(time.ctime() + " merging " + bwa1_filename + " and " + bwa2_filename)
-	pysam.merge("-n", "-f",  combined_bwa_filename, bwa1_filename + ".srtn", bwa2_filename + ".srtn")
+	print(time.ctime() + " merging " + bwa1_sorted_filename + " and " + bwa2_sorted_filename)
+	pysam.merge("-n", "-f",  combined_bwa_filename, bwa1_sorted_filename, bwa2_sorted_filename)
 	print(time.ctime() + " filtering and pairing reads")
 	filter_pair_reads(combined_bwa_filename, mapq, paired_filename, qc_filename)
 	print(time.ctime() + " paired bam file generated. Sorting by coordinates.")
@@ -69,15 +69,15 @@ def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_fil
 	proc.communicate()
 	with open(paired_filename + ".srt.bam.flagstat") as flag_file:
 		lines = flag_file.readlines()
-		uniquely_mapped_count = lines[5].split()[0]
+		uniquely_mapped_count = lines[7].split()[0]
 	print(time.ctime() + " calling samtools flagstat on mapped and duplicate-removed file")
 	proc = subprocess.Popen("samtools flagstat " + paired_filename + ".rmdup.bam > " + paired_filename + ".rmdup.flagstat", 
 				shell = True)
 	proc.communicate()
 	with open(paired_filename + ".rmdup.flagstat") as flag_file:
 		lines = flag_file.readlines()
-		duprmd_count = lines[4].split()[0]
-		intra_count = lines[9].split()[0]
+		duprmd_count = lines[7].split()[0]
+		intra_count = lines[11].split()[0]
 		intra_count = str(int(float(intra_count)) / 2)
 	print(time.ctime() + " calling samtools sort for sorting by query names")
 	#pysam.sort("-n", "-o", bwa_filename + ".srtn.rmdup.bam", paired_filename + ".rmdup.bam")
@@ -185,7 +185,7 @@ def set_filenames(fastq1, fastq2, outdir, prefix):
 		bwa2_filename = tempdir + "/" + fastq2_prefix + ".bwa.sam"
 		bwa2_sorted_filename = bwa2_filename + ".srtn"
 	elif fastq2.endswith(".sam") or fastq2.endswith(".bam"):
-		setname = fastq1[ (fastq1.rfind("/") + 1) : ]
+		setname = fastq2[ (fastq2.rfind("/") + 1) : ]
 		bwa2_filename = fastq2
 		bwa2_sorted_filename = tempdir + "/" + setname + ".srtn"
 	combined_bwa_filename = tempdir + "/" + prefix + ".merged.srtn.bam"
