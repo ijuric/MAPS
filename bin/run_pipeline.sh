@@ -2,8 +2,8 @@
 python_path=/home/abnousa/software/python3.6.5/bin/python #should have pysam, pybedtools installed. bedtools, samtools should be in the path
 Rscript_path=/opt/R-3.4.3/lib64/R/bin/Rscript
 ###################################################################
-feather=0 #start from feather or run only MAPS
-maps=1
+feather=1 #start from feather or run only MAPS
+maps=0
 number_of_datasets=1
 dataset_name="test"
 fastq_format=".fastq"
@@ -17,7 +17,7 @@ filter_file="None"
 generate_hic=1
 mapq=30
 length_cutoff=1000
-threads=8
+threads=4
 ####################################################################
 ###SET THE VARIABLES AT THIS PORTION ONLY IF 
 ### number_of_datasets > 1 (merging exisitng datasets)
@@ -62,7 +62,7 @@ elif [ $organism == "hg19" ]; then
 	chr_count=22
 elif [ $organism == "hg38" ]; then
 	if [ -z $bwa_index ]; then
-		bwa_index="/home/jurici/MAPS/MAPS_data_files/"$organism"/BWA_index/hg38.fa"
+		bwa_index="/home/jurici/MAPS/MAPS_data_files/"$organism"/BWA_index/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta"
 	fi
 	genomic_feat_filepath=$cwd"/../MAPS_data_files/"$organism"/genomic_features/F_GC_M_MboI_"$resolution"Kb_el.GRCh38.txt"
 	chr_count=22
