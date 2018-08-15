@@ -10,6 +10,7 @@ outdir="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2"
 macs2_filepath="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/MACS2_peaks/final.replicated.narrowPeak"
 organism="mm10"
 bin_size=5000
+fdr=2
 filter_file="None"
 generate_hic=1
 ####################################################################
@@ -130,6 +131,7 @@ if [ $maps -eq 1 ]; then
 	$python_path $cwd/MAPS/MAPS.py $maps_output"maps_"$dataset_name".maps"
 	echo "second"
 	$Rscript_path $cwd/MAPS/MAPS_regression_and_peak_caller.r $maps_output $dataset_name"."$resolution"k" $bin_size $chr_count $filter_file
+	$Rscript_path $cwd/MAPS/MAPS_peak_formatting.r $maps_output $dataset_name"."$resolution"k" $fdr $bin_size
 	echo "third"
 	cp "$(readlink -f $0)" $maps_output"/execution_script_copy"
 	chmod 777 $maps_output
