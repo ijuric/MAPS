@@ -23,7 +23,7 @@ args <- commandArgs(trailingOnly=TRUE)
 
 #args = c('/home/jurici/work/PLACseq/MAPS_pipe/results/shen/', 'MS051_merged.5k',1,'None')
 
-fltr = data.frame(chrom='chrNONE',bin=-1)
+fltr = data.frame(chr='chrNONE',bin=-1)
 
 if (length(args) != 5) {
     print('Wrong number of arguments. Stopping.')
@@ -51,7 +51,7 @@ print(fltr)
 
 COUNT_CUTOFF = 12
 RATIO_CUTOFF = 2.0
-GAP = 3 * RESOLUTION
+GAP = 15000
 
 ## loading data
 mm_combined_and = data.frame()
@@ -66,7 +66,7 @@ for (i in chroms) {
         mm$chr = i
         mm = subset( mm, dist > 1) # removing adjacent bins
         print(paste(i,dim(mm),'before'))
-        mm = subset(mm, !(mm$chr %in% fltr$chrom & (mm$bin1_mid %in% fltr$bin | mm$bin2_mid %in% fltr$bin ))) ## filtering out bad bins
+        mm = subset(mm, !(mm$chr %in% fltr$chr & (mm$bin1_mid %in% fltr$bin | mm$bin2_mid %in% fltr$bin ))) ## filtering out bad bins
         print(paste(i,dim(mm),'after'))
         if (j == '.and') {
             mm_combined_and = rbind(mm_combined_and, mm)
