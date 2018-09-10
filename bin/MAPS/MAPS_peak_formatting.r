@@ -1,3 +1,4 @@
+options("scipen"=999)
 library(data.table)
 
 args <- commandArgs(trailingOnly=TRUE)
