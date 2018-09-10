@@ -10,7 +10,7 @@
 
 
 library(VGAM)
-options(warn=1)
+options(warn=-1)
 
 ### constants
 chroms = NULL
@@ -40,7 +40,6 @@ if (length(args) != 5) {
     RESOLUTION = as.integer(args[3])
     chroms = paste('chr',seq(1,as.numeric(args[4]),1),sep='')
     if (length(args) == 5) {
-        print('here')
         if (args[5] != 'None') {
             FILTER = args[5]
             fltr = read.table(FILTER,header=T)
@@ -65,9 +64,7 @@ for (i in chroms) {
         mm = read.table(paste(inf_name,j,sep=''),header=T)
         mm$chr = i
         mm = subset( mm, dist > 1) # removing adjacent bins
-        print(paste(i,dim(mm),'before'))
         mm = subset(mm, !(mm$chr %in% fltr$chr & (mm$bin1_mid %in% fltr$bin | mm$bin2_mid %in% fltr$bin ))) ## filtering out bad bins
-        print(paste(i,dim(mm),'after'))
         if (j == '.and') {
             mm_combined_and = rbind(mm_combined_and, mm)
         } else if (j == '.xor') {
