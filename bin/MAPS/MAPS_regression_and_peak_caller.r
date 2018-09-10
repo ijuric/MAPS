@@ -20,9 +20,6 @@ RESOLUTION = NULL
 ###
 
 args <- commandArgs(trailingOnly=TRUE)
-
-#args = c('/home/jurici/work/PLACseq/MAPS_pipe/results/shen/', 'MS051_merged.5k',1,'None')
-
 fltr = data.frame(chr='chrNONE',bin=-1)
 
 if (length(args) != 5) {
