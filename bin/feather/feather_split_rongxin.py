@@ -21,12 +21,23 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
 	#sys.stdout = logger.Logger(outdir + "/" + prefix + ".feather.log")
 	print(time.ctime() + " starting the splitting operation")
 	samfile = pysam.AlignmentFile(input_bam, "rb")
+	filename_prefix = outdir + "/" + prefix
+	temp_filename_prefix = outdir + "/tempfiles/" + prefix
 	chr_list = extract_chr_list(samfile.header)
-	autosomal_chrs = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name[3].isdigit())]
-	print(autosomal_chrs)
+	chrname_lengths = list(map(len, chr_list))
+	rename_chrs = True if (min(chrname_lengths) == 1) else False
+	if rename_chrs:
+		chr_list =["chr" + chrom for chrom in chr_list]
+		#autosomal_chrs = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1 and chr_name[0].isdigit())]
+		s2 = pysam.AlignmentFile(temp_filename_prefix + "_sam_header", "wb", reference_names = chr_list, reference_lengths = samfile.header.lengths)
+		new_header = s2.header
+	else:
+		#autosomal_chrs = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1 and chr_name[3].isdigit())]
+		new_header = samfile.header
+	autosomal_chrs = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1 and chr_name[3].isdigit())]
 	if (len(chr_list) > 100):
 		print("NOTE: Too many chromosomes. Generating bed files only for ones without an underscore in their name")
-		chr_list = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1)]
+		chr_list = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1)]
 	if not is_sorted_queryname(samfile.header):
 		sys.exit("Error: bam needs to be sorted by read name")
 	filename_prefix = outdir + "/" + prefix
@@ -34,21 +45,21 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
 	fname_output_shrt = temp_filename_prefix + ".shrt.bam"
 	if (per_chr):
 		short_bed_files, long_intra_bam_files, long_intra_bam_filenames, long_intra_bedpe_files = generate_per_chrom_files(chr_list, 
-									filename_prefix, temp_filename_prefix, samfile.header)
+									filename_prefix, temp_filename_prefix, new_header)
 	fname_output_long_intra = temp_filename_prefix + ".long.intra.bam"
-	fout_long_intra = pysam.AlignmentFile(fname_output_long_intra, "wb", header=samfile.header)
+	fout_long_intra = pysam.AlignmentFile(fname_output_long_intra, "wb", header = new_header)
 	fname_long_intra_bedpe = filename_prefix + ".long.intra.bedpe"
 	fname_output_long_inter = temp_filename_prefix + ".long.inter.bam"
 	fname_output_shrt_inter = temp_filename_prefix + ".shrt.inter.bam"
 	fname_shrt_bed = filename_prefix + ".shrt.vip.bed"
-	fout_long_inter = pysam.AlignmentFile(fname_output_long_inter, "wb", header=samfile.header)
-	fout_shrt_inter = pysam.AlignmentFile(fname_output_shrt_inter, "wb", header=samfile.header)
-	fout_shrt = pysam.AlignmentFile(fname_output_shrt, "wb", header=samfile.header)
+	fout_long_inter = pysam.AlignmentFile(fname_output_long_inter, "wb", header = new_header)
+	fout_shrt_inter = pysam.AlignmentFile(fname_output_shrt_inter, "wb", header = new_header)
+	fout_shrt = pysam.AlignmentFile(fname_output_shrt, "wb", header = new_header)
 	fout_shrt_bed = open(fname_shrt_bed, "w")
 	hic_chr_list = chr_list
 	if (len(hic_chr_list) > 30):
 		print("NOTE: Too many chromosomes. Generating hic only for ones without an underscore in their name")
-		hic_chr_list = [chr_name for chr_name in hic_chr_list if (chr_name.find('_') == -1)]
+		hic_chr_list = [chr_name for chr_name in hic_chr_list if (chr_name.find('_') == -1 and chr_name.find(".") == -1)]
 	if (generate_hic):
 		hic_tsv_files = open_hic_files(hic_chr_list, outdir, prefix)
 	read_num = 0
@@ -65,6 +76,10 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
 	short_auto_vip_count = 0
 	short_autosomal_inter_count = 0
 	for read in samfile:
+		if rename_chrs:
+			read = rename_read_chromosomes(read, new_header)
+			#autosomal_chrs = ["chr" + chrom for chrom in autosomal_chrs]
+			#print(autosomal_chrs)
 		if read_num % 2 == 1:
 			if read.query_name != prev.query_name:
 				exit("unmatched query" + read.query_name)
@@ -266,3 +281,17 @@ def extract_chr_list(header):
 			chrs.append(chr_line["SN"])
 	return(chrs)
 
+def rename_read_chromosomes(read, header):
+	r = pysam.AlignedSegment(header)
+	r.reference_name = "chr" + read.reference_name
+	r.next_reference_name = "chr" + read.next_reference_name
+	r.tags = read.tags
+	r.bin, r.cigar, r.cigarstring, r.cigartuples, r.flag, r.is_duplicate, r.is_paired, r.is_proper_pair, r.is_qcfail, r.is_read1, r.is_read2, r.is_reverse, r.is_secondary, r.is_supplementary, r.is_unmapped, r.isize, r.mapping_quality, r.mapq, r.mate_is_reverse, r.mate_is_unmapped, r.mpos, r.mrnm, r.next_reference_id, r.next_reference_start, r.pnext, r.pos = read.bin, read.cigar, read.cigarstring, read.cigartuples, read.flag, read.is_duplicate, read.is_paired, read.is_proper_pair, read.is_qcfail, read.is_read1, read.is_read2, read.is_reverse, read.is_secondary, read.is_supplementary, read.is_unmapped, read.isize, read.mapping_quality, read.mapq, read.mate_is_reverse, read.mate_is_unmapped, read.mpos, read.mrnm, read.next_reference_id, read.next_reference_start, read.pnext, read.pos
+	r.qname, r.query_name, r.query_sequence, r.reference_id, r.reference_start = read.qname, read.query_name, read.query_sequence, read.reference_id, read.reference_start
+	r.rname, r.rnext, r.seq, r.tags, r.template_length, r.tid, r.tlen =  read.rname, read.rnext, read.seq, read.tags, read.template_length, read.tid, read.tlen
+	r.query_qualities = read.query_qualities
+	return(r)
+
+if __name__ == "__main__":
+	input_bam, outdir, prefix, cutoff, per_chr, generate_hic = sys.argv[1:len(sys.argv)]
+	split_main(input_bam, outdir, prefix, int(float(cutoff)), per_chr, generate_hic)
