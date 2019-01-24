@@ -3,9 +3,9 @@ python_path=/home/abnousa/software/python3.6.5/bin/python #should have pysam, py
 Rscript_path=/opt/R-3.4.3/lib64/R/bin/Rscript
 ###################################################################
 feather=1 #start from feather or run only MAPS
-maps=1
-number_of_datasets=1
-dataset_name="test"
+maps=0
+number_of_datasets=2
+dataset_name="test_doubled"
 fastq_format=".fastq"
 fastq_dir="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/fastq"
 outdir="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2"
@@ -19,24 +19,32 @@ generate_hic=1
 mapq=30
 length_cutoff=1000
 threads=4
+model="pospoisson" #"negbinom"
 ####################################################################
 ###SET THE VARIABLES AT THIS PORTION ONLY IF 
 ### number_of_datasets > 1 (merging exisitng datasets)
 ### specify as many datasets as required
 ####################################################################
-dataset1="/home/jurici/MAPS/PLAC-Seq_datasets/RenLab_F123_CTCF/feather_output/CTCF.rep1_current"
-dataset2="/home/jurici/MAPS/PLAC-Seq_datasets/RenLab_F123_CTCF/feather_output/CTCF.rep2_current"
+dataset1="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/feather_output/test_current"
+dataset2="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/feather_output/test_current"
 dataset3=""
 dataset4=""
 #...
+##################################################################
+###SET THESE VARIABLES ONLY IF FEATHER = 0 AND YOU WANT TO RUN
+###USING A SPECIFIC FEATHER OUTPUT RATHER THAN $datasetname_Current
 ###################################################################
+feather_output_symlink=""
+##################################################################
 
 DATE=`date '+%Y%m%d_%H%M%S'`
 #####Armen:
 fastq1=$fastq_dir/$dataset_name"_R1"$fastq_format
 fastq2=$fastq_dir/$dataset_name"_R2"$fastq_format
 feather_output=$outdir"/feather_output/"$dataset_name"_"$DATE
-feather_output_symlink=$outdir"/feather_output/"$dataset_name"_current"
+if [ $feather_output_symlink == "" ]; then
+	feather_output_symlink=$outdir"/feather_output/"$dataset_name"_current"
+fi
 resolution=$(bc <<< "$bin_size/1000")
 per_chr='True' # set this to zero if you don't want per chromosome output bed and bedpe files
 feather_logfile=$feather_output"/"$dataset_name".feather.log"
@@ -138,7 +146,7 @@ if [ $maps -eq 1 ]; then
 	echo "first"
 	$python_path $cwd/MAPS/MAPS.py $maps_output"maps_"$dataset_name".maps"
 	echo "second"
-	$Rscript_path $cwd/MAPS/MAPS_regression_and_peak_caller.r $maps_output $dataset_name"."$resolution"k" $bin_size $chr_count $filter_file
+	$Rscript_path $cwd/MAPS/MAPS_regression_and_peak_caller.r $maps_output $dataset_name"."$resolution"k" $bin_size $chr_count $filter_file $model
 	$Rscript_path $cwd/MAPS/MAPS_peak_formatting.r $maps_output $dataset_name"."$resolution"k" $fdr $bin_size
 	echo "third"
 	cp "$(readlink -f $0)" $maps_output"/execution_script_copy"

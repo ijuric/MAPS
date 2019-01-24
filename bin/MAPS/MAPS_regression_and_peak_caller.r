@@ -1,5 +1,5 @@
 ## run example:
-## /opt/R-3.4.3/lib64/R/bin/Rscript MAPS_regression_and_peak_caller.r /home/jurici/work/PLACseq/MAPS_pipe/results/CTCF/ CTCF.rep1.10k 10000 19 mESC.10k.MAPS2_filter
+##  Rscript MAPS_regression_and_peak_caller.r /home/jurici/work/PLACseq/MAPS_pipe/results/mESC_test/ MY_115.5k 5000 1 None pospoisson
 ##
 ## arguments:
 ## INFDIR - dir with reg files
@@ -7,7 +7,7 @@
 ## RESOLUTION - resolution (for example 5000 or 10000)
 ## chroms - number of shromosomes (19 for mouse, 22 for human)
 ## FILTER - file containing bins that need to be filtered out. Format: two columns "chrom", "bin". "chrom" contains 'chr1','chr2',.. "bin" is bin label
-
+## regresison_type - pospoisson for positive poisson regression, negbinom for negative binomial. default is pospoisson
 
 library(VGAM)
 options(warn=-1)
@@ -16,15 +16,14 @@ options(warn=-1)
 chroms = NULL
 runs = c(1)
 RESOLUTION = NULL
-
 ###
 
 args <- commandArgs(trailingOnly=TRUE)
 fltr = data.frame(chr='chrNONE',bin=-1)
 
-if (length(args) != 5) {
+if (length(args) < 5 || length(args) > 6) {
     print('Wrong number of arguments. Stopping.')
-    print('Arguments needed (in this order): INFDIR, SET, RESOLUTION, chroms, FILTER.')
+    print('Arguments needed (in this order): INFDIR, SET, RESOLUTION, chroms, FILTER, regression_type.')
     print('FILTER is optional argument. Omitt it if no filtering required.')
     print(paste('Number of arguments entered:',length(args)))
     print('Arguments entered:')
@@ -42,8 +41,19 @@ if (length(args) != 5) {
             fltr = read.table(FILTER,header=T)
         }
     }
+    ## this done so that the script is compatible with previous run_pipeline scripts
+    if (length(args) == 5) {
+        REG_TYPE = 'pospoisson'
+    } else if (length(args) == 6) {
+        if (args[6] != 'pospoisson' && args[6] != 'negbinom') {
+            print(paste('wrong regression choice. Your choice:', args[6], '. Avaiable choices: pospoisson or negbinom'),sep = ' ')
+            quit()
+        }
+        REG_TYPE = args[6]
+    }
 }
-print(fltr)
+print('filter used (if any):')
+if (args[5] == 'None') { print('None')} else { print(fltr) }
 
 COUNT_CUTOFF = 12
 RATIO_CUTOFF = 2.0
@@ -57,7 +67,7 @@ for (i in chroms) {
     for (j in c('.and','.xor')) {
         print(paste('loading chromosome ',i,' ',j,sep=''))
         inf_name = paste(INFDIR,'reg_raw.',i,'.',SET,sep='')
-        outf_names = c(outf_names, paste(inf_name,j,'.MAPS2_pospoisson',sep = ''))
+        outf_names = c(outf_names, paste(inf_name,j,'.MAPS2_',REG_TYPE,sep = ''))
         mm = read.table(paste(inf_name,j,sep=''),header=T)
         mm$chr = i
         mm = subset( mm, dist > 1) # removing adjacent bins
@@ -88,6 +98,26 @@ coeff[5]*mm$logdist + coeff[6]*mm$logShortCount), 10)
     mm$expected2 <- mm$expected2 /(1-exp(-mm$expected2))
     mm$ratio2 <- mm$count / mm$expected2
     mm$p_val_reg2 = ppois(mm$count, mm$expected2, lower.tail = FALSE, log.p = FALSE) / ppois(0, mm$expected2, lower.tail = FALSE, log.p = FALSE)
+    mm$p_bonferroni = mm$p_val_reg2 * dataset_length
+    mm$fdr <- p.adjust(mm$p_val_reg2, method='fdr')
+    return(mm)
+}
+
+negbinom_regression <- function(mm, dataset_length) {
+    fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = negbinomial(), data = mm)
+    mm$expected = fitted(fit)
+    sze = exp(coef(fit)[2]) ##size parameter
+    mm$p_val = pnbinom(mm$count, mu = mm$expected, size = sze, lower.tail = FALSE)
+    m1 = mm[ mm$p_val > ( 1 / length(mm$p_val)),]
+    ## second regression
+    fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = negbinomial(), data = m1)
+    coeff<-round(coef(fit),10)
+    sze = exp(coeff[2]) ## size parameterafter 2nd regression
+    print(coeff)
+    mm$expected2 <- round(exp(coeff[1] + coeff[3]*mm$logl + coeff[4]*mm$loggc + coeff[5]*mm$logm + coeff[6]*mm$logdist +
+coeff[7]*mm$logShortCount), 10) ## mu parameter
+    mm$ratio2 <- mm$count / mm$expected2
+    mm$p_val_reg2 = pnbinom(mm$count, mu = mm$expected2, size = sze, lower.tail = FALSE)
     mm$p_bonferroni = mm$p_val_reg2 * dataset_length
     mm$fdr <- p.adjust(mm$p_val_reg2, method='fdr')
     return(mm)
@@ -215,23 +245,29 @@ FDR = c(2)
 
 singletons_names = paste(chroms,'_0',sep='')
 for (r in runs) {
+## in case you want to do resampling
+## you'd put resampling code here
     name_counter = 1
-    ## do subsampling
-    ## ....
-    ## ....
-    ## run regression
     for (i in chroms) {
         ## regression
         print(paste('run',r,': regression on chromosome',i))
         print(outf_names[name_counter])
         mm = subset(mm_combined_and, chr == i)
-        mm = pospoisson_regression(mm, dataset_length)
+        if (REG_TYPE == 'pospoisson') {
+            mm = pospoisson_regression(mm, dataset_length)
+        } else if (REG_TYPE == 'negbinom') {
+            mm = negbinom_regression(mm, dataset_length)
+        }
         write.table(mm,outf_names[name_counter],row.names = TRUE,col.names = TRUE,quote=FALSE)
         name_counter = name_counter + 1
         print(outf_names[name_counter])
         mx_combined_and = rbind(mx_combined_and, mm)
         mm = subset(mm_combined_xor, chr == i)
-        mm = pospoisson_regression(mm, dataset_length)
+        if (REG_TYPE == 'pospoisson') {
+            mm = pospoisson_regression(mm, dataset_length)
+        } else if (REG_TYPE == 'negbinom') {
+            mm = negbinom_regression(mm, dataset_length)
+        }
         write.table(mm,outf_names[name_counter],row.names = TRUE,col.names = TRUE,quote=FALSE)
         name_counter = name_counter + 1
         mx_combined_xor = rbind(mx_combined_xor, mm)
