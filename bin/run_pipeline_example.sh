@@ -42,7 +42,7 @@ DATE=`date '+%Y%m%d_%H%M%S'`
 fastq1=$fastq_dir/$dataset_name"_R1"$fastq_format
 fastq2=$fastq_dir/$dataset_name"_R2"$fastq_format
 feather_output=$outdir"/feather_output/"$dataset_name"_"$DATE
-if [ $feather_output_symlink == "" ]; then
+if [ "$feather_output_symlink" == "" ]; then
 	feather_output_symlink=$outdir"/feather_output/"$dataset_name"_current"
 fi
 resolution=$(bc <<< "$bin_size/1000")
