@@ -10,6 +10,7 @@
 ## regresison_type - pospoisson for positive poisson regression, negbinom for negative binomial. default is pospoisson
 
 library(VGAM)
+library(MASS)
 options(warn=-1)
 
 ### constants
@@ -104,18 +105,17 @@ coeff[5]*mm$logdist + coeff[6]*mm$logShortCount), 10)
 }
 
 negbinom_regression <- function(mm, dataset_length) {
-    fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = negbinomial(), data = mm)
+    fit <- glm.nb(count ~ logl + loggc + logm + logdist + logShortCount, data = mm)
     mm$expected = fitted(fit)
-    sze = exp(coef(fit)[2]) ##size parameter
+    sze = fit$theta ##size parameter
     mm$p_val = pnbinom(mm$count, mu = mm$expected, size = sze, lower.tail = FALSE)
     m1 = mm[ mm$p_val > ( 1 / length(mm$p_val)),]
     ## second regression
-    fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = negbinomial(), data = m1)
-    coeff<-round(coef(fit),10)
-    sze = exp(coeff[2]) ## size parameterafter 2nd regression
-    print(coeff)
-    mm$expected2 <- round(exp(coeff[1] + coeff[3]*mm$logl + coeff[4]*mm$loggc + coeff[5]*mm$logm + coeff[6]*mm$logdist +
-coeff[7]*mm$logShortCount), 10) ## mu parameter
+    fit <- glm.nb(count ~ logl + loggc + logm + logdist + logShortCount, data = m1)
+    coeff<-round(fit$coefficients,10)
+    sze = fit$theta
+    mm$expected2 <- round(exp(coeff[1] + coeff[2]*mm$logl + coeff[3]*mm$loggc + coeff[4]*mm$logm + coeff[5]*mm$logdist +
+coeff[6]*mm$logShortCount), 10) ## mu parameter
     mm$ratio2 <- mm$count / mm$expected2
     mm$p_val_reg2 = pnbinom(mm$count, mu = mm$expected2, size = sze, lower.tail = FALSE)
     mm$p_bonferroni = mm$p_val_reg2 * dataset_length
