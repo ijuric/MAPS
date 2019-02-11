@@ -1,5 +1,6 @@
 #!/bin/bash
 python_path=/home/abnousa/software/python3.6.5/bin/python #should have pysam, pybedtools installed. bedtools, samtools should be in the path
+#python_path=/home/jurici/anaconda3/bin/python
 Rscript_path=/opt/R-3.4.3/lib64/R/bin/Rscript
 ###################################################################
 feather=1 #start from feather or run only MAPS
@@ -12,7 +13,7 @@ outdir="/home/jurici/MAPS/PLAC-Seq_datasets/GM12878"
 macs2_filepath="/home/jurici/MAPS/PLAC-Seq_datasets/GM12878/MACS2_peaks/ENCFF686FLD.bed"
 organism="hg19"
 bwa_index=""
-bin_size=10000
+bin_size=5000
 fdr=2
 filter_file="None"
 generate_hic=1

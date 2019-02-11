@@ -19,13 +19,14 @@ import glob
 def main():
 	input_bam = sys.argv[1]
 	output = sys.argv[2]
+	setname = sys.argv[3]
 	outdir = output[:max(0, output.rfind("/"))]
 	print("\noutput: " + output + "\n")
 	print("\noutdir: " + outdir + "\n")
 	if (len(outdir) == 0):
 		outdir = "."
-	split_main(input_bam, outdir)
-	temp_files = glob.glob(outdir + "/hic_tempfiles/*")
+	split_main(input_bam, outdir, setname)
+	temp_files = glob.glob(outdir + "/hic_tempfiles_" + setname + "/*")
 	command = ["cat"]
 	command.extend(temp_files)
 	print("catting per chromosome pair files into a single file.")
@@ -33,7 +34,7 @@ def main():
 		proc = subprocess.Popen(command, stdout = outfile, shell= False)
 		proc.communicate()
 
-def split_main(input_bam, outdir):
+def split_main(input_bam, outdir, setname):
 	print(time.ctime() + " starting the splitting operation")
 	print(input_bam)
 	samfile = pysam.AlignmentFile(input_bam, "rb")
@@ -44,7 +45,7 @@ def split_main(input_bam, outdir):
 		#print("\n".join(chr_list))
 	if not is_sorted_queryname(samfile.header):
 		sys.exit("Error: bam needs to be sorted by read name")
-	hic_tsv_files = open_hic_files(chr_list, outdir)
+	hic_tsv_files = open_hic_files(chr_list, outdir, setname)
 	read_num = 0
 	prev = pysam.AlignedSegment()
 	for read in samfile:
@@ -105,8 +106,8 @@ def close_files(files_dict):
 	for filename in files_dict.values():
 		filename.close()
 
-def open_hic_files(chr_list, outdir):
-	files_dir =  outdir + "/hic_tempfiles"
+def open_hic_files(chr_list, outdir, setname):
+	files_dir =  outdir + "/hic_tempfiles_" + setname
 	print("\ncreating dir: " + files_dir + "\n")
 	#print(len(chr_list))
 	if os.path.exists(files_dir):
