@@ -155,6 +155,9 @@ fastq and 1D peaks (macs2) files are in your MAPS folder (/home/[USER]/MAPS/exam
 
 Run run_pipeline_test.sh script
 
+Results should looks omething like this:
+https://github.com/ijuric/MAPS/blob/master/examples/expected_output_test_set1.bedpe
+
 ### GM12878 cells example:
 In this example (bin/run_pipeline_example.sh), we show how to run MAPS on one HiChIP dataset on Smc1a cohesin subunit in human B lymphocyte GM12878 cells. After successfully finishing setting described in MAPS pipeline setup, you will need to download data files:
 * 1D chip-seq peaks
