@@ -2,7 +2,7 @@
 ## What is MAPS pipeline?
 MAPS (Model-based Analysis of PLAC-Seq data) pipeline is a a set of multiple scripts used to analyze PLAC-Seq and HiChIP data. MAPS pipeline contains multiple scripts. The run_pipeline.sh is a prototypes of a shell script containing the locations of files needed to run MAPS is entered as well as calls for different MAPS pipeline scripts. Internally, there are two parts of MAPS pipeline. First part, called feather, does mapping and preprocessing of pair-end reads and creates long and short .bed/.bedpe files. Second part, called MAPS, does read binning and peak calling.
 For additional description of MAPS method, check our paper: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006982
-For any questions regarding MAPS please send mail to ivan.juric.gen@gmail.com or hum@ccf.org
+For any questions regarding MAPS please send mail to Ivan Juric ( ivan.juric.gen@gmail.com ) or Ming Hu ( hum@ccf.org )
 
 
 ## MAPS pipeline setup
