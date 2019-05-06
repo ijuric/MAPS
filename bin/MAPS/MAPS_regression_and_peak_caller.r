@@ -287,6 +287,10 @@ for (r in runs) {
         peaks_xor = subset(mx_combined_xor, count >= COUNT_CUTOFF & ratio2 >= RATIO_CUTOFF & -log10(fdr) > fdr_cutoff)
         print("finding peaks")
         peaks = rbind(peaks_and, peaks_xor)
+        if (dim(peaks)[1] == 0) {
+            print(paste('ERROR MAPS_regression_and_peak_caller.r: 0 bin pairs with count >= ',COUNT_CUTOFF,' observed/expected ratio >= ',RATIO_CUTOFF,' and -log10(fdr) > ',fdr_cutoff,sep=''))
+            quit()
+        }
         peaks = label_peaks(peaks)
         peaks$lab = paste(peaks$chr, peaks$label,sep='_')
         peak_types = classify_peaks(peaks)
