@@ -101,6 +101,8 @@ chr15	1300000
   * -log10(fdr), used when looking for significant interaction. The default value of this parameter is 2, corresponding to fdr = 0.01
 * model
   * regression model. Can be pospoisson or negbinom. MAPS supports positive poisson (pospoisson) or negative binomial (negbinom) regression. Default value is pospoisson (positive poisson regression).
+* sex_chroms_to_process
+  * either X,Y,XY or NA. This specifies which (if any) sex chromosomes the user wants to run MAPS on: X = X chr only, Y = Y chr only, XY = both X and Y chroms, NA = none (just autosomal). Default value is NA.
 * bwa_index
   * path to bwa indexed reference genome
 

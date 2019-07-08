@@ -34,7 +34,7 @@ def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_fil
 	paired_filename, bwa1_filename, bwa2_filename, bwa1_sorted_filename, bwa2_sorted_filename, combined_bwa_filename, qc_filename = set_filenames(fastq1, fastq2, outdir, prefix)
 	#running bwa mem
 	for fastq, bwa_filename in [(fastq1, bwa1_filename), (fastq2, bwa2_filename)]:
-		if fastq.endswith(".fastq") or fastq.endswith("fastq.gz"):
+		if fastq.endswith(".fastq") or fastq.endswith("fastq.gz") or fastq.endswith("fq") or fastq.endswith("fq.gz"):
 			bwa_mem(fastq, bwa_index, threads, bwa_filename)
 		elif not (fastq.endswith(".sam") or fastq.endswith(".bam")):
 			exit("Error: Input file for filtering should be of type fastq, fastq.gz, sam, or bam. Exiting!")
@@ -172,7 +172,7 @@ def set_filenames(fastq1, fastq2, outdir, prefix):
 	if not os.path.exists(tempdir):
 		os.makedirs(tempdir)
 	paired_filename = outdir + "/" + prefix + ".paired"
-	if fastq1.endswith(".fastq") or fastq1.endswith(".fastq.gz"):
+	if fastq1.endswith(".fastq") or fastq1.endswith(".fastq.gz") or fastq1.endswith(".fq") or fastq1.endswith(".fq.gz"):
 		fastq1_prefix = fastq1[ (fastq1.rfind("/") + 1) : ]
 		bwa1_filename = tempdir + "/" + fastq1_prefix + ".bwa.sam"
 		bwa1_sorted_filename = bwa1_filename + ".srtn"
@@ -180,7 +180,7 @@ def set_filenames(fastq1, fastq2, outdir, prefix):
 		setname = fastq1[ (fastq1.rfind("/") + 1) : ]
 		bwa1_filename = fastq1
 		bwa1_sorted_filename = tempdir + "/" + setname + ".srtn"
-	if fastq2.endswith(".fastq") or fastq2.endswith(".fastq.gz"):
+	if fastq2.endswith(".fastq") or fastq2.endswith(".fastq.gz") or fastq1.endswith(".fq") or fastq1.endswith(".fq.gz"):
 		fastq2_prefix = fastq2[ (fastq2.rfind("/") + 1) : ]
 		bwa2_filename = tempdir + "/" + fastq2_prefix + ".bwa.sam"
 		bwa2_sorted_filename = bwa2_filename + ".srtn"
@@ -267,7 +267,7 @@ def check_requirements():
 			"installed and is in the system path. Exiting!")
 
 def check_arguments(fastq1, fastq2, bwa_index, mapq, threads):
-	check_file_existance((fastq1, fastq2, bwa_index))
+	check_file_existance((fastq1, fastq2))
 	if fastq1 == fastq2: exit("ERROR: Input fastq files should be different. Exiting!")
 	if (int(threads) < 1):
 		print(threads)

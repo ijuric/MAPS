@@ -5,14 +5,14 @@ Rscript_path=/opt/R-3.4.3/lib64/R/bin/Rscript
 feather=1 #start from feather or run only MAPS
 maps=0
 number_of_datasets=2
-dataset_name="test_doubled"
+dataset_name="test_set_combined"
 fastq_format=".fastq"
-fastq_dir="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/fastq"
+fastq_dir="/home/jurici/MAPS/examples/test_set1"
 outdir="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2"
 macs2_filepath="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/MACS2_peaks/final.replicated.narrowPeak"
 organism="mm10"
 bwa_index=""
-bin_size=5000
+bin_size=10000
 fdr=2
 filter_file="None"
 generate_hic=1
@@ -20,13 +20,14 @@ mapq=30
 length_cutoff=1000
 threads=4
 model="pospoisson" #"negbinom"
+sex_chroms_to_process="NA"
 ####################################################################
 ###SET THE VARIABLES AT THIS PORTION ONLY IF 
 ### number_of_datasets > 1 (merging exisitng datasets)
 ### specify as many datasets as required
 ####################################################################
-dataset1="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/feather_output/test_current"
-dataset2="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/feather_output/test_current"
+dataset1="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/feather_output/test_set1_current"
+dataset2="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/feather_output/test_set2_current"
 dataset3=""
 dataset4=""
 #...
@@ -42,7 +43,7 @@ DATE=`date '+%Y%m%d_%H%M%S'`
 fastq1=$fastq_dir/$dataset_name"_R1"$fastq_format
 fastq2=$fastq_dir/$dataset_name"_R2"$fastq_format
 feather_output=$outdir"/feather_output/"$dataset_name"_"$DATE
-if [ $feather_output_symlink == "" ]; then
+if [ "$feather_output_symlink" == "" ]; then
 	feather_output_symlink=$outdir"/feather_output/"$dataset_name"_current"
 fi
 resolution=$(bc <<< "$bin_size/1000")
@@ -78,6 +79,12 @@ elif [ $organism == "hg38" ]; then
 fi
 
 ####Ivan:"
+if [[ $sex_chroms_to_process != "X" && $sex_chroms_to_process != "Y" && $sex_chroms_to_process != "XY" ]]; then
+	sex_chroms_to_processes="NA"
+	sex_chroms=""
+else
+	sex_chroms=$sex_chroms_to_process
+fi
 long_bedpe_dir=$feather_output_symlink"/"
 short_bed_dir=$feather_output_symlink"/"
 maps_output=$outdir"/MAPS_output/"$dataset_name"_"$DATE"/"
@@ -90,6 +97,7 @@ if [ $feather -eq 1 ]; then
 		ds_array=()
 		hic_array=()
 		qc_array=()
+		qc_filename=$feather_output/$dataset_name".feather.qc"
 		for i in `seq $number_of_datasets`
 		do
 			ds_name="dataset$i"
@@ -99,18 +107,22 @@ if [ $feather -eq 1 ]; then
 			eval ds=\$$ds_name
 			eval hic=\$$hic_name
 			qc_file=$(ls $ds/*.qc.tsv)
+			awk 'FNR == 3 {rmdup=$2}; FNR == 4 {intra=$2}; {a[FNR]=$1; b[FNR]=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) if (i != 12 && i != 13) {print a[i], b[i], c[i]} else {if( i== 12) {print a[i], b[i]*rmdup, c[i]}else{print a[i], b[i]*intra, c[i]}}}' $qc_file > $qc_filename".s"$i
+			#echo $qc_file >> $qc_filename".s"$i
 			#printf "$ds\n"
 			ds_array+=($ds)
 			hic_array+=($hic)
-			qc_array+=($qc_file)
+			qc_array+=($qc_filename".s"$i)
 			#printf "$i\n"
 			#printf '%s\n' "${ds_array[@]}"
 			#printf '%s\n' "${hic_array[@]}"
-			printf '%s\n' "${qc_array[@]}"
+			#printf '%s\n' "${qc_array[@]}"
 		done
+		#printf '%s\n' "${qc_array[@]}"
 		$cwd/feather/concat_bedfiles.sh $feather_output $dataset_name "${ds_array[@]}"
 		qc_filename=$feather_output/$dataset_name".feather.qc"
-		awk '{a[FNR]=$1; b[FNR]+=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) print a[i], b[i], c[i]}' "${qc_array[@]}" > $qc_filename".tsv"
+		awk '{a[FNR]=$1; b[FNR]+=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) print a[i], b[i], c[i]}' "${qc_array[@]}" > $qc_filename"_tmp"
+		awk 'FNR == 3 {rmdup=$2}; FNR == 4 {intra=$2}; {a[FNR]=$1; b[FNR]=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) if (i != 12 && i != 13) {print a[i], b[i], c[i]} else {if( i == 12) {print a[i], b[i]/rmdup, c[i]}else{print a[i], b[i]/intra, c[i]}}}' $qc_filename"_tmp" > $qc_filename".tsv"
 		sed -i 's/ /\t/g' $qc_filename".tsv"
 		if [ $generate_hic -eq 1 ]; then
 			echo "$feather_output/$hic_dir"
@@ -118,7 +130,7 @@ if [ $feather -eq 1 ]; then
 			$cwd/feather/concat_hic.sh  $feather_output $dataset_name $hic_dir "${hic_array[@]}"
 		fi
 	else
-		$python_path $cwd/feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic
+		$python_path $cwd/feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic -a $macs2_filepath
 		qc_filename=$feather_output/$dataset_name".feather.qc"
 		temp_qc_file=$feather_output/tempfiles/$dataset_name".feather.qc.modified"
 		#printf "dataset name:\t"$dataset_name"\n" >> $qc_filename
@@ -142,11 +154,11 @@ fi
 if [ $maps -eq 1 ]; then
 	mkdir -p $maps_output
 	echo "$dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output"
-	$python_path $cwd/MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output
+	$python_path $cwd/MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output $sex_chroms_to_process
 	echo "first"
 	$python_path $cwd/MAPS/MAPS.py $maps_output"maps_"$dataset_name".maps"
 	echo "second"
-	$Rscript_path $cwd/MAPS/MAPS_regression_and_peak_caller.r $maps_output $dataset_name"."$resolution"k" $bin_size $chr_count $filter_file $model
+	$Rscript_path $cwd/MAPS/MAPS_regression_and_peak_caller.r $maps_output $dataset_name"."$resolution"k" $bin_size $chr_count$sex_chroms $filter_file $model 
 	$Rscript_path $cwd/MAPS/MAPS_peak_formatting.r $maps_output $dataset_name"."$resolution"k" $fdr $bin_size
 	echo "third"
 	cp "$(readlink -f $0)" $maps_output"/execution_script_copy"

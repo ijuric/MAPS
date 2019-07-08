@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 import subprocess
 import pysam
@@ -20,6 +22,7 @@ length_threshold = 1000
 split_filename = ""
 per_chr_bedpe = "1"
 generate_hic = "1"
+chip_peaks = None
 
 def main():
 	parser = setup_arg_parsers()
@@ -31,7 +34,7 @@ def main():
 	#print(mapq)
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
-	if cmd == "filter":
+	if cmd == "map":
 		from feather_filter_chr import filter_main
 		filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_file = True)
 		#write_bam_from_samstr(filter_output_sam, outdir + "/" + prefix + ".pairs.filtered.bam")
@@ -42,12 +45,12 @@ def main():
 		#	f.write(bam_output)
 	elif cmd == "split":
 		from feather_split_rongxin import split_main
-		split_main(split_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic)
+		split_main(split_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic, chip_peaks)
 	elif cmd == "preprocess":
 		from feather_filter_chr import filter_main
 		from feather_split_rongxin import split_main
 		filter_output_filename = filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_file = False)
-		split_main(filter_output_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic)
+		split_main(filter_output_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic, chip_peaks)
 
 def parse_args(parser):
 	args = parser.parse_args()
@@ -66,7 +69,7 @@ def setup_arg_parsers():
 	parent_parser = argparse.ArgumentParser(add_help=False)
 	parent_parser.add_argument("-o", "--outdir", help = "output directory", required=True)
 	parent_parser.add_argument("-p", "--prefix", help = "prefix for the output files")
-	filter_parser = subparsers.add_parser("filter", help = "run bwa or start from two bam files and filter them",
+	filter_parser = subparsers.add_parser("map", help = "run bwa or start from two bam files and filter them, generating paired-end bam file",
 						parents = [parent_parser])
 	set_filter_parser_args(filter_parser)
 	split_parser = subparsers.add_parser("split", help = "split a bam by contact length threshold",
@@ -85,13 +88,15 @@ def set_filter_parser_args(parser):
 	parser.add_argument("-q", "--mapq", help = "MAPQ threshold", type = int)
 	parser.add_argument("-t", "--threads", help = "number of threads to use", type = int)
 	#parser.add_argument("-m", "--max-mem", help = "Maximum memory available per thread")
-	parser.add_argument("-j", "--generate-hic", help = "Generate .hic file", type = str2bool, nargs = '?', const = True, default = generate_hic)
+	#parser.add_argument("-j", "--generate-hic", help = "Generate .hic file", type = str2bool, nargs = '?', const = True, default = generate_hic)
 
 def set_split_parser_args(parser):
 	parser.add_argument("-l", "--length-threshold", help = "length threshold for long/short splitting", type = int)
 	parser.add_argument("-s", "--split-filename", help = "bam or sam file that needs to be split")
 	parser.add_argument("-c", "--per-chr-bedpe", help = "generate one bedpe file for each chromosome", 
 				type = str2bool, nargs = '?', const = True, default = "t")
+	parser.add_argument("-j", "--generate-hic", help = "Generate .hic file", type = str2bool, nargs = '?', const = True, default = generate_hic)
+	parser.add_argument("-a", "--chip-peaks", help = "1D anchors bed file (ChIP/ATAC-seq)", default = chip_peaks)
 
 def set_preproc_parser_args(parser):
 	parser.add_argument("-f1", "--fastq1", help = "first fasta/bam file", required = True)
@@ -104,6 +109,7 @@ def set_preproc_parser_args(parser):
 	parser.add_argument("-c", "--per-chr-bedpe", help = "generate one bedpe file for each chromosome",
 				type = str2bool, nargs = '?', const = True, default = per_chr_bedpe)
 	parser.add_argument("-j", "--generate-hic", help = "Generate .hic file",  type = str2bool, nargs = '?', const = True, default = generate_hic)
+	parser.add_argument("-a", "--chip-peaks", help = "1D anchors bed file (ChIP/ATAC-seq)", default = chip_peaks)
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):

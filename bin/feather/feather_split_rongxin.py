@@ -17,9 +17,28 @@ import subprocess
 import glob
 import logger
 
-def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
+def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic, chip_peaks):
 	#sys.stdout = logger.Logger(outdir + "/" + prefix + ".feather.log")
 	print(time.ctime() + " starting the splitting operation")
+	flagstat_filename = glob.glob(outdir + "/*.rmdup.flagstat")
+	chip_peaks = glob.glob(chip_peaks)
+	if len(flagstat_filename) > 0 and len(chip_peaks) > 0:
+		flagstat_filename = flagstat_filename[0]
+		chip_peaks = chip_peaks[0]
+		print(time.ctime() + " QC metrics will be computed from: " + chip_peaks + " and " + flagstat_filename)
+	elif len(flagstat_filename) > 0:
+		chip_peaks = False
+		flagstat_filename = flagstat_filename[0]
+		print(time.ctime() + " WARNING: no ChIP peaks file found to compute the on-chip ratio")
+		print(time.ctime() + " QC metrics will be computed from: " + flagstat_filename)
+	elif len(chip_peaks) > 0:
+		if len(flagstat_filename) == 0:
+			flagstat_filename = input_bam + ".rmdup.flagstat"
+			print(time.ctime() + " calling samtools flagstat on provided bam file")
+			proc = subprocess.Popen("samtools flagstat " + input_bam + " > " + flagstat_filename, shell = True)
+			proc.communicate()
+		chip_peaks = chip_peaks[0]
+		print(time.ctime() + " QC metric (on-chip ratio) will be computed from: " + chip_peaks + " and " + flagstat_filename)
 	samfile = pysam.AlignmentFile(input_bam, "rb")
 	filename_prefix = outdir + "/" + prefix
 	temp_filename_prefix = outdir + "/tempfiles/" + prefix
@@ -28,16 +47,14 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
 	rename_chrs = True if (min(chrname_lengths) == 1) else False
 	if rename_chrs:
 		chr_list =["chr" + chrom for chrom in chr_list]
-		#autosomal_chrs = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1 and chr_name[0].isdigit())]
 		s2 = pysam.AlignmentFile(temp_filename_prefix + "_sam_header", "wb", reference_names = chr_list, reference_lengths = samfile.header.lengths)
 		new_header = s2.header
 	else:
-		#autosomal_chrs = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1 and chr_name[3].isdigit())]
 		new_header = samfile.header
-	autosomal_chrs = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1 and chr_name[3].isdigit())]
-	if (len(chr_list) > 100):
-		print("NOTE: Too many chromosomes. Generating bed files only for ones without an underscore in their name")
-		chr_list = [chr_name for chr_name in chr_list if (chr_name.find('_') == -1 and chr_name.find('.') == -1)]
+	autosomal_chrs = [chr_name for chr_name in chr_list if ((chr_name.find('_') == -1 and chr_name.find('.') == -1 and chr_name[3].isdigit()) or chr_name == "chrX" or chr_name == "chrY")]
+	potential_chrs = ['chr' + str(x) for x in list(range(1,23)) + ['X', 'Y']]
+	autosomal_chrs = [x for x in autosomal_chrs if x in potential_chrs]
+	chr_list = autosomal_chrs
 	if not is_sorted_queryname(samfile.header):
 		sys.exit("Error: bam needs to be sorted by read name")
 	filename_prefix = outdir + "/" + prefix
@@ -56,10 +73,7 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
 	fout_shrt_inter = pysam.AlignmentFile(fname_output_shrt_inter, "wb", header = new_header)
 	fout_shrt = pysam.AlignmentFile(fname_output_shrt, "wb", header = new_header)
 	fout_shrt_bed = open(fname_shrt_bed, "w")
-	hic_chr_list = chr_list
-	if (len(hic_chr_list) > 30):
-		print("NOTE: Too many chromosomes. Generating hic only for ones without an underscore in their name")
-		hic_chr_list = [chr_name for chr_name in hic_chr_list if (chr_name.find('_') == -1 and chr_name.find(".") == -1)]
+	hic_chr_list = autosomal_chrs
 	if (generate_hic):
 		hic_tsv_files = open_hic_files(hic_chr_list, outdir, prefix)
 	read_num = 0
@@ -86,57 +100,31 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
 		pos1 = prev.reference_end if prev.is_reverse else prev.reference_start
 		pos2 = read.reference_end if read.is_reverse else read.reference_start
 
-		if ((read.next_reference_name == read.reference_name) and (abs(read.template_length) <= cutoff) and (abs(read.template_length) >= 0)):
-			fout_shrt.write(read)
-			shrt_count += 1
-			if (read.reference_name in autosomal_chrs):
-				short_autosomal_count += 1
-			if read_num % 2 == 1:
-				if((prev.is_reverse == False and read.is_reverse == True) or (prev.is_reverse == True and read.is_reverse == False)):
-					chrom = prev.reference_name
-					if(pos1 != pos2):
-						fout_shrt_bed.write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
-						shrt_vip_count += 1
-						if chrom in autosomal_chrs:
-							short_auto_vip_count += 1
-						if (per_chr and (chrom in chr_list)):
-							short_bed_files[chrom].write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
-		elif (read.next_reference_name == read.reference_name):
-			if (per_chr and (read.reference_name in chr_list)):
-				long_intra_bam_files[read.reference_name].write(read)
-			if (read.reference_name in autosomal_chrs):
-				long_autosomal_intra_count += 1
-				if (abs(read.template_length) <= 1000000):
-					long_filtered_count += 1
-			fout_long_intra.write(read)
-			long_intra_count += 1
-		elif (abs(read.template_length) <= cutoff) and (abs(read.template_length) >= 0):
-			if (read.reference_name in autosomal_chrs and prev.reference_name in autosomal_chrs):
-				short_autosomal_inter_count += 1
-			fout_shrt_inter.write(read)
-			short_inter_count += 1
-		else:
-			long_inter_count += 1
-			fout_long_inter.write(read)
+		if (read.reference_name in autosomal_chrs) and (read.next_reference_name in autosomal_chrs): #both reads need to be in the autosomal + X/Y to be considered in split
+			if read.next_reference_name != read.reference_name: #inter-chromosomal autosomal reads
+				long_inter_count += 1
+				fout_long_inter.write(read)
+			else: #intra-chromsomal autosomal reads
+				if ((abs(read.template_length) <= cutoff) and (abs(read.template_length) >= 0)): #intra-chromosomal short autosomal
+					fout_shrt.write(read)
+					shrt_count += 1
+					if read_num % 2 == 1:
+						if (((prev.is_reverse == False and read.is_reverse == True) or (prev.is_reverse == True and read.is_reverse == False)) and (pos1 != pos2)): #intra short vip
+							chrom = prev.reference_name
+							fout_shrt_bed.write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
+							shrt_vip_count += 1
+							if (per_chr):
+								short_bed_files[chrom].write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
+				else: #intra-chromosomal long autosomal
+					long_autosomal_intra_count += 1
+					if (per_chr):
+						long_intra_bam_files[read.reference_name].write(read)
+					if (abs(read.template_length) <= 1000000):
+						long_filtered_count += 1
+					fout_long_intra.write(read)
+					long_intra_count += 1
 		if read_num % 2 == 1:
 			if (generate_hic):
-				'''
-				try:
-					chrom_num1 = int(float(read.reference_name[3:]))
-					chrom_num2 = int(float(prev.reference_name[3:]))
-					if chrom_num1 > chrom_num2:
-						r1 = prev
-						r2 = read
-					elif chrom_num1 == chrom_num2 and read.reference_start > prev.reference_start:
-						r1 = prev
-						r2 = read
-					else:
-						r1 = read
-						r2 = prev
-				except ValueError:
-					r1 = read
-					r2 = prev
-				'''
 				if read.reference_start > prev.reference_start:
 					r1 = prev
 					r2 = read
@@ -208,24 +196,55 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic):
 	long_filtered_count /= 2
 	short_inter_count /= 2
 	long_inter_count /= 2
-	inter_all_count = short_inter_count + long_inter_count
+	#inter_all_count = short_inter_count + long_inter_count
+	intra_all_count = shrt_count + long_intra_count
+	if (flagstat_filename):
+		with open(flagstat_filename) as flag_file:
+			lines = flag_file.readlines()
+			duprmd_count = int(lines[7].split()[0])
+			trans_ratio = long_inter_count / duprmd_count
+			long_cis_ratio = long_intra_count / intra_all_count
+	else:
+		trans_ratio, long_cis_ratio = -1, -1
+	if (chip_peaks):
+		command = "cut -f1-3 " + fname_shrt_bed + " > " + outdir + "/tempfiles/shrt_vip_bed.cut"
+		proc = subprocess.Popen(command, stdout = subprocess.PIPE, shell= True)
+		proc.communicate()
+		command = "cut -f1-3 " + chip_peaks + " > " + outdir + "/tempfiles/chip_peaks.cut"
+		proc = subprocess.Popen(command, stdout = subprocess.PIPE, shell= True)
+		proc.communicate()
+		command = "bedtools intersect -a " + outdir + "/tempfiles/shrt_vip_bed.cut" + " -b " + outdir + "/tempfiles/chip_peaks.cut" + " -u | wc -l"
+		proc = subprocess.Popen(command, stdout = subprocess.PIPE, shell= True)
+		on_chip = int(proc.stdout.read().decode("utf-8"))
+		command = "wc -l " + chip_peaks
+		proc = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE)
+		chip_count = int(proc.stdout.read().decode("utf-8").split()[0])
+		on_chip_ratio = float(on_chip) / chip_count
+	else:
+		on_chip_ratio = -1
 	with open(qc_filename, 'a') as outfile:
-		outfile.write("{0:70} {1} ".format("number of intrachromosomal pairs", str(int(shrt_count + long_intra_count))))
-		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(shrt_count + long_intra_count)) / int(float(read_count))))
+		outfile.write("{0:70} {1} ".format("number of intrachromosomal pairs", str(int(intra_all_count))))
+		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(intra_all_count)) / int(float(read_count))))
 		outfile.write("{0:70} {1} ".format("number of short-range intrachromosomal pairs", str(int(shrt_count))))
 		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(shrt_count)) / int(float(read_count))))
-		outfile.write("{0:70} {1} ".format("number of short-range intrachromosomal autosomal pairs", str(int(short_autosomal_count))))
-		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(short_autosomal_count)) / int(float(read_count))))
-		outfile.write("{0:70} {1} ".format("number of short-range autosomal vip pairs", str(int(short_auto_vip_count))))
-		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(short_auto_vip_count)) / int(float(read_count))))
+		#outfile.write("{0:70} {1} ".format("number of short-range intrachromosomal autosomal pairs", str(int(short_autosomal_count))))
+		#outfile.write("\t({0:.2f}%)\n".format(100 * int(float(short_autosomal_count)) / int(float(read_count))))
+		outfile.write("{0:70} {1} ".format("number of short-range vip pairs", str(int(shrt_vip_count))))
+		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(shrt_vip_count)) / int(float(read_count))))
 		outfile.write("{0:70} {1} ".format("number of long-range intra-chromosomal pairs:", str(int(long_intra_count))))
 		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(long_intra_count)) / int(float(read_count))))
-		outfile.write("{0:70} {1} ".format("number of inter-chromosomal pairs:", str(int(inter_all_count))))
-		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(inter_all_count)) / int(float(read_count))))
-		outfile.write("{0:70} {1} ".format("number of long-range autosomal intra-chromosomal pairs", str(int(long_autosomal_intra_count))))
-		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(long_autosomal_intra_count)) / int(float(read_count))))
-		outfile.write("{0:70} {1} ".format("number of long-range autosomal intra 1k-1M pairs", str(int(long_filtered_count))))
-		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(long_filtered_count)) / int(float(read_count))))
+		outfile.write("{0:70} {1} ".format("number of inter-chromosomal pairs:", str(int(long_inter_count))))
+		outfile.write("\t({0:.2f}%)\n".format(100 * int(float(long_inter_count)) / int(float(read_count))))
+		#outfile.write("{0:70} {1} ".format("number of long-range autosomal intra-chromosomal pairs", str(int(long_autosomal_intra_count))))
+		#outfile.write("\t({0:.2f}%)\n".format(100 * int(float(long_autosomal_intra_count)) / int(float(read_count))))
+		#outfile.write("{0:70} {1} ".format("number of long-range autosomal intra 1k-1M pairs", str(int(long_filtered_count))))
+		#outfile.write("\t({0:.2f}%)\n".format(100 * int(float(long_filtered_count)) / int(float(read_count))))
+		outfile.write("{0:70}".format("trans read ratio") + "{0:.5f} ".format(trans_ratio))
+		outfile.write("\t({0:.2f}%)\n".format(100 * trans_ratio))
+		outfile.write("{0:70}".format("long cis read ratio") + "{0:.5f} ".format(long_cis_ratio))
+		outfile.write("\t({0:.2f}%)\n".format(100 * long_cis_ratio))
+		outfile.write("{0:70}".format("FRiP") + "{0:.5f} ".format(on_chip_ratio))
+		outfile.write("\t({0:.2f}%)\n".format(100 * on_chip_ratio))
 	print(time.ctime() + " splitting completed")
 
 def close_files(files_dict):
@@ -293,5 +312,5 @@ def rename_read_chromosomes(read, header):
 	return(r)
 
 if __name__ == "__main__":
-	input_bam, outdir, prefix, cutoff, per_chr, generate_hic = sys.argv[1:len(sys.argv)]
-	split_main(input_bam, outdir, prefix, int(float(cutoff)), per_chr, generate_hic)
+	input_bam, outdir, prefix, cutoff, per_chr, generate_hic, chip_peaks = sys.argv[1:len(sys.argv)]
+	split_main(input_bam, outdir, prefix, int(float(cutoff)), per_chr, generate_hic, chip_peaks)

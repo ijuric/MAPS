@@ -3,9 +3,9 @@ mapped
 not_duplicated
 intra_all
 short_all
-short_auto
 short_final
 long_intra
 inter_all
-long_intra_auto
-long_final
+trans_ratio
+long_cis_ratio
+FRiP

@@ -1,5 +1,5 @@
 ## run example:
-##  Rscript MAPS_regression_and_peak_caller.r /home/jurici/work/PLACseq/MAPS_pipe/results/mESC_test/ MY_115.5k 5000 1 None pospoisson
+##  Rscript MAPS_regression_and_peak_caller.r /home/jurici/work/PLACseq/MAPS_pipe/results/mESC_test/ MY_115.5k 5000 1 None pospoisson NA
 ##
 ## arguments:
 ## INFDIR - dir with reg files
@@ -35,7 +35,21 @@ if (length(args) < 5 || length(args) > 6) {
     INFDIR = args[1]
     SET = args[2]
     RESOLUTION = as.integer(args[3])
-    chroms = paste('chr',seq(1,as.numeric(args[4]),1),sep='')
+    if (grepl('XY',args[4])) {
+        args[4] = strsplit(args[4],'XY')[1]
+        chroms = paste('chr',seq(1,as.numeric(args[4]),1),sep='')
+        chroms = c(chroms, 'chrX', 'chrY')
+    } else if( grepl('X', args[4])) {
+        args[4] = strsplit(args[4],'X')[1]
+        chroms = paste('chr',seq(1,as.numeric(args[4]),1),sep='')
+        chroms = c(chroms, 'chrX')
+    } else if( grepl('Y', args[4])) {
+        args[4] = strsplit(args[4],'Y')[1]
+        chroms = paste('chr',seq(1,as.numeric(args[4]),1),sep='')
+        chroms = c(chroms, 'chrY')
+    } else {
+        chroms = paste('chr',seq(1,as.numeric(args[4]),1),sep='')
+    }
     if (length(args) == 5) {
         if (args[5] != 'None') {
             FILTER = args[5]
@@ -147,6 +161,8 @@ do_summaries <- function(peaks_and,peaks_xor, peaks, fraction, r) {
 
 label_peaks <- function(df) {
     chroms = unique(df$chr)
+    print('chromosomes with potential interactions:')
+    print(chroms)
     final = data.frame()
     for (CHR in chroms) {
         y = df[df$chr == CHR,]
@@ -239,8 +255,6 @@ classify_peaks <- function(final) {
 mx_combined_and = data.frame()
 mx_combined_xor = data.frame()
 summary_all_runs = data.frame()
-#FDR = c()
-#FDR = seq(from=1,to=3,by=1)
 FDR = c(2)
 
 singletons_names = paste(chroms,'_0',sep='')

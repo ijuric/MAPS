@@ -38,6 +38,10 @@ def validate_input_data(input_data):
         params['SHORT_FORMAT'] = input_data['SHORT_FORMAT'][1]
     if 'N_CHROMS' in input_data:
         params['N_CHROMS'] = input_data['N_CHROMS'].astype('int')[1]
+    if 'SEX_CHROMS' in input_data:
+        params['SEX_CHROMS'] = input_data['SEX_CHROMS'][1]
+    else:
+        params['SEX_CHROMS'] = ''
     return params
 
 def load_MACS2(MACS2_PATH):
@@ -78,9 +82,16 @@ def init(p):
     input_data = pd.read_csv(p.run_file,sep='=',skip_blank_lines=True, comment='#',index_col=0,header=None)
     input_data = input_data.transpose()
     params = validate_input_data(input_data)
-    print(params)
     ## setting up chromosomes
     chroms = ['chr' + str(i) for i in range(1,params['N_CHROMS']+1,1)]
+    print(chroms)
+    if params['SEX_CHROMS'] == 'X':
+        chroms.append('chrX')
+    elif params['SEX_CHROMS'] == 'Y':
+        chroms.append('chrY')
+    elif params['SEX_CHROMS'] == 'XY':
+        chroms.append('chrX')
+        chroms.append('chrY')
     print(chroms)
     params['BIN_RANGE'] = float(params['BINNING_RANGE'])/float(params['BIN_SIZE'])
     print('loading MACS2 peaks')
