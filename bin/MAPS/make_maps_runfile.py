@@ -1,6 +1,6 @@
 ##
 ## EXAMPLE RUN:
-## python make_maps_runfile.py MY_113.MY_115 /home/jurici/work/PLACseq/MAPS_pipe/results/mESC/ /home/jurici/work/PLACseq/analysis/binning_for_regression/new_set/final.replicated.narrowPeak /home/jurici/work/PLACseq/data/genomic_features/F_GC_M_MboI_5Kb_el.mm10.txt /home/jurici/work/PLACseq/analysis/binning_for_regression/new_set/ /home/jurici/work/PLACseq/analysis/binning_for_regression/new_set/ 5000 19
+## python make_maps_runfile.py MY_113.MY_115_test /home/jurici/work/PLACseq/MAPS_pipe/results/mESC/ /home/jurici/work/PLACseq/analysis/binning_for_regression/new_set/final.replicated.narrowPeak /home/jurici/work/PLACseq/data/genomic_features/F_GC_M_MboI_5Kb_el.mm10.txt /home/jurici/work/PLACseq/analysis/binning_for_regression/new_set/ /home/jurici/work/PLACseq/analysis/binning_for_regression/new_set/ 5000 19 ./ NA
 ##
 
 import argparse
@@ -19,7 +19,8 @@ def init(parser):
     'SHORT_FORMAT=[DATASET_NAME].[CHROMOSOME].shrt.vip.bed'+'\n'\
     'BIN_SIZE='+str(parser.BIN_SIZE)+'\n'\
     'BINNING_RANGE='+str(parser.BINNING_RANGE)+'\n'\
-    'N_CHROMS='+str(parser.N_CHROMS)+'\n'
+    'N_CHROMS='+str(parser.N_CHROMS)+'\n'\
+    'SEX_CHROMS='+str(parser.SEX_CHROMS)+'\n'
     outf.write(outstring)
     outf.close()
 
@@ -36,6 +37,7 @@ def main():
     parser.add_argument('BIN_SIZE', help = '')
     parser.add_argument('N_CHROMS', help = '')
     parser.add_argument('OUT_FILE_PATH', help = 'directory where .maps file will be stored. Must end with slash ')
+    parser.add_argument('SEX_CHROMS', help='')
     parser.add_argument('--BINNING_RANGE', default=1000000, help = '')
     p = parser.parse_args(sys.argv[1:])
     init(p)
