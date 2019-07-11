@@ -60,6 +60,7 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic, chip_pe
 	filename_prefix = outdir + "/" + prefix
 	temp_filename_prefix = outdir + "/tempfiles/" + prefix
 	fname_output_shrt = temp_filename_prefix + ".shrt.bam"
+	#fname_output_shrt_genomewide =  temp_filename_prefix + ".shrt.genomewide.bam"
 	if (per_chr):
 		short_bed_files, long_intra_bam_files, long_intra_bam_filenames, long_intra_bedpe_files = generate_per_chrom_files(chr_list, 
 									filename_prefix, temp_filename_prefix, new_header)
@@ -100,29 +101,30 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic, chip_pe
 		pos1 = prev.reference_end if prev.is_reverse else prev.reference_start
 		pos2 = read.reference_end if read.is_reverse else read.reference_start
 
-		if (read.reference_name in autosomal_chrs) and (read.next_reference_name in autosomal_chrs): #both reads need to be in the autosomal + X/Y to be considered in split
-			if read.next_reference_name != read.reference_name: #inter-chromosomal autosomal reads
-				long_inter_count += 1
+		is_intra, is_short, is_vip, is_auto = classify_reads(read, prev, autosomal_chrs, cutoff)
+		if is_intra and is_auto and (not is_short): #intra-chromosomal long autosomal
+			long_autosomal_intra_count += 1
+			if (per_chr):
+				long_intra_bam_files[read.reference_name].write(read)
+			if (abs(read.template_length) <= 1000000):
+				long_filtered_count += 1
+			fout_long_intra.write(read)
+			long_intra_count += 1
+		if (not is_intra): #inter-chromosomal autosomal reads
+			long_inter_count += 1
+			if is_auto:
 				fout_long_inter.write(read)
-			else: #intra-chromsomal autosomal reads
-				if ((abs(read.template_length) <= cutoff) and (abs(read.template_length) >= 0)): #intra-chromosomal short autosomal
-					fout_shrt.write(read)
-					shrt_count += 1
-					if read_num % 2 == 1:
-						if (((prev.is_reverse == False and read.is_reverse == True) or (prev.is_reverse == True and read.is_reverse == False)) and (pos1 != pos2)): #intra short vip
-							chrom = prev.reference_name
-							fout_shrt_bed.write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
-							shrt_vip_count += 1
-							if (per_chr):
-								short_bed_files[chrom].write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
-				else: #intra-chromosomal long autosomal
-					long_autosomal_intra_count += 1
+		if (is_short and is_intra): #short reads
+			if is_auto: # write to bam file
+				fout_shrt.write(read)
+				shrt_count += 1
+			if is_vip and is_auto and pos1 != pos2: #short vip reads
+				if read_num % 2 == 1:
+					chrom = prev.reference_name
+					fout_shrt_bed.write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
+					shrt_vip_count += 1
 					if (per_chr):
-						long_intra_bam_files[read.reference_name].write(read)
-					if (abs(read.template_length) <= 1000000):
-						long_filtered_count += 1
-					fout_long_intra.write(read)
-					long_intra_count += 1
+						short_bed_files[chrom].write("\t".join([chrom] + list(map(str, sorted([pos1, pos2]))) + [prev.query_name, "\n"]))
 		if read_num % 2 == 1:
 			if (generate_hic):
 				if read.reference_start > prev.reference_start:
@@ -246,6 +248,19 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic, chip_pe
 		outfile.write("{0:70}".format("FRiP") + "{0:.5f} ".format(on_chip_ratio))
 		outfile.write("\t({0:.2f}%)\n".format(100 * on_chip_ratio))
 	print(time.ctime() + " splitting completed")
+
+
+def classify_reads(read1, read2, autosomal_chrs, cutoff):
+	is_intra, is_short, is_vip, is_auto = [False] * 4
+	if (read1.reference_name in autosomal_chrs) and (read1.next_reference_name in autosomal_chrs):
+		is_auto = True
+	if ((abs(read1.template_length) <= cutoff) and (abs(read1.template_length) >= 0)):
+		is_short = True
+	if (read1.next_reference_name == read1.reference_name):
+		is_intra = True
+	if ((read2.is_reverse == False and read1.is_reverse == True) or (read2.is_reverse == True and read1.is_reverse == False)):
+		is_vip = True
+	return is_intra, is_short, is_vip, is_auto
 
 def close_files(files_dict):
 	for filename in files_dict.values():
