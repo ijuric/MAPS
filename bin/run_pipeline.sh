@@ -13,7 +13,8 @@ macs2_filepath="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/MACS2_peaks/fi
 organism="mm10"
 bwa_index=""
 bin_size=10000
-fdr=2
+binning_range=1000000
+fdr=2 #this is used for labeling. do not change
 filter_file="None"
 generate_hic=1
 mapq=30
@@ -154,7 +155,7 @@ fi
 if [ $maps -eq 1 ]; then
 	mkdir -p $maps_output
 	echo "$dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output"
-	$python_path $cwd/MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output $sex_chroms_to_process
+	$python_path $cwd/MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output $sex_chroms_to_process --BINNING_RANGE $binning_range
 	echo "first"
 	$python_path $cwd/MAPS/MAPS.py $maps_output"maps_"$dataset_name".maps"
 	echo "second"

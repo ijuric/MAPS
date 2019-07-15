@@ -5,7 +5,7 @@
 ## INFDIR - dir with reg files
 ## SET - dataset name
 ## RESOLUTION - resolution (for example 5000 or 10000)
-## chroms - number of shromosomes (19 for mouse, 22 for human)
+## chroms - number of chromosomes (19 for mouse, 22 for human)
 ## FILTER - file containing bins that need to be filtered out. Format: two columns "chrom", "bin". "chrom" contains 'chr1','chr2',.. "bin" is bin label
 ## regresison_type - pospoisson for positive poisson regression, negbinom for negative binomial. default is pospoisson
 

@@ -13,14 +13,15 @@ macs2_filepath="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/MACS2_peaks/fi
 organism="mm10"
 bwa_index=""
 bin_size=10000
-fdr=2
+binning_range=1000000
+fdr=2 # this is used just for labeling. do not change
 filter_file="None"
 generate_hic=1
 mapq=30
 length_cutoff=1000
 threads=4
 model="pospoisson" #"negbinom"
-sex_chroms_to_process="XY"
+sex_chroms_to_process="X"
 ####################################################################
 ###SET THE VARIABLES AT THIS PORTION ONLY IF 
 ### number_of_datasets > 1 (merging exisitng datasets)

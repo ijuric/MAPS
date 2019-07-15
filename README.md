@@ -84,6 +84,8 @@ In run_pipeline_[PROJECT_NAME].sh set parameters:
   * index of bwa. Set to path to bwa indexed genome
 * bin_size
   * resolution. Usually 5000 or 10000.  
+* binning_range
+  * binning range. How far 3D interactionc can be called, also affects the estimate of the expected count. Default=1000000 Do not set to high value if data is sparse. Check MAPS paper for more details
 * filter_file
   * Location of file with blacklisted bins. This is used if you want to exclude genomic regions from MAPS analysis. Reads mapping to those regions will be ignored. Set to “None” if not blacklisting anything. A blacklist file is a tab delimited table containing two columns, named chr and bin, representing chromosome and the start location of bins that user wants to blacklist. For example:
 ```
@@ -97,14 +99,14 @@ chr15	1300000
   * 1 if you want .hic file to be generated, 0 if not.
 * Dataset1, dataset2,...
   * Used for running MAPS on merged dataset. When number_of_datasets > 1, run_pipeline looks at the paths defined by Dataset1, dataset2… to find  where each biological replica .bedpe and .bed files are.
-* fdr
-  * -log10(fdr), used when looking for significant interaction. The default value of this parameter is 2, corresponding to fdr = 0.01
 * model
   * regression model. Can be pospoisson or negbinom. MAPS supports positive poisson (pospoisson) or negative binomial (negbinom) regression. Default value is pospoisson (positive poisson regression).
 * sex_chroms_to_process
   * either X,Y,XY or NA. This specifies which (if any) sex chromosomes the user wants to run MAPS on: X = X chr only, Y = Y chr only, XY = both X and Y chroms, NA = none (just autosomal). Default value is NA.
 * bwa_index
   * path to bwa indexed reference genome
+* fdr
+  * this is used for labeling purposes only. Do not change. See the MAPS paper for more details on how fdr is picked.
 
 ### Running MAPS
 Run appropriately set up run_pipeline script
