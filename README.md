@@ -85,7 +85,7 @@ In run_pipeline_[PROJECT_NAME].sh set parameters:
 * bin_size
   * resolution. Usually 5000 or 10000.  
 * binning_range
-  * binning range. How far 3D interactionc can be called, also affects the estimate of the expected count. Default=1000000 Do not set to high value if data is sparse. Check MAPS paper for more details
+  * binning range. How far 3D interactions can be called, also affects the estimate of the expected count. Default=1000000 Do not set to high value if data is sparse. Check MAPS paper for more details
 * filter_file
   * Location of file with blacklisted bins. This is used if you want to exclude genomic regions from MAPS analysis. Reads mapping to those regions will be ignored. Set to “None” if not blacklisting anything. A blacklist file is a tab delimited table containing two columns, named chr and bin, representing chromosome and the start location of bins that user wants to blacklist. For example:
 ```
