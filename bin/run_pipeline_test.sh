@@ -81,7 +81,7 @@ fi
 
 ####Ivan:"
 if [[ $sex_chroms_to_process != "X" && $sex_chroms_to_process != "Y" && $sex_chroms_to_process != "XY" ]]; then
-	sex_chroms_to_processes="NA"
+	sex_chroms_to_process="NA"
 	sex_chroms=""
 else
 	sex_chroms=$sex_chroms_to_process

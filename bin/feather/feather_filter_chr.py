@@ -89,7 +89,7 @@ def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_fil
 	qc_filename = outdir + "/" + prefix + ".feather.qc"
 	with open(qc_filename, 'w') as outfile:
 		outfile.write("{0:70} {1}".format("number of sequencing pairs", str(read_count)))
-		outfile.write("{0:70} {1} ".format("number of unqiuely mapped pairs (MAPQ >= " + str(mapq) + ")", str(uniquely_mapped_count)))
+		outfile.write("{0:70} {1} ".format("number of uniquely mapped pairs (MAPQ >= " + str(mapq) + ")", str(uniquely_mapped_count)))
 		outfile.write("\t({0:.2f}%)\n".format(100 * (int(float(uniquely_mapped_count)) / int(float(read_count)))))
 		outfile.write("{0:70} {1} ".format("number of pairs after duplicate removal", str(duprmd_count)))
 		outfile.write("\t({0:.2f}%)\n".format(100 * (int(float(duprmd_count)) / int(float(read_count)))))

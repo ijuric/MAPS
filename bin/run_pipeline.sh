@@ -3,25 +3,25 @@ python_path=/home/abnousa/software/python3.6.5/bin/python #should have pysam, py
 Rscript_path=/opt/R-3.4.3/lib64/R/bin/Rscript
 ###################################################################
 feather=1 #start from feather or run only MAPS
-maps=0
-number_of_datasets=2
-dataset_name="test_set_combined"
+maps=1
+number_of_datasets=1
+dataset_name="test_set1"
 fastq_format=".fastq"
 fastq_dir="/home/jurici/MAPS/examples/test_set1"
-outdir="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2"
+outdir="/home/jurici/MAPS/examples/outputs/test_set1"
 macs2_filepath="/home/jurici/MAPS/PLAC-Seq_datasets/test_dataset2/MACS2_peaks/final.replicated.narrowPeak"
 organism="mm10"
 bwa_index=""
 bin_size=10000
 binning_range=1000000
-fdr=2 #this is used for labeling. do not change
+fdr=2 # this is used just for labeling. do not change
 filter_file="None"
 generate_hic=1
 mapq=30
 length_cutoff=1000
 threads=4
 model="pospoisson" #"negbinom"
-sex_chroms_to_process="NA"
+sex_chroms_to_process="X"
 ####################################################################
 ###SET THE VARIABLES AT THIS PORTION ONLY IF 
 ### number_of_datasets > 1 (merging exisitng datasets)
@@ -81,7 +81,7 @@ fi
 
 ####Ivan:"
 if [[ $sex_chroms_to_process != "X" && $sex_chroms_to_process != "Y" && $sex_chroms_to_process != "XY" ]]; then
-	sex_chroms_to_processes="NA"
+	sex_chroms_to_process="NA"
 	sex_chroms=""
 else
 	sex_chroms=$sex_chroms_to_process
@@ -155,7 +155,7 @@ fi
 if [ $maps -eq 1 ]; then
 	mkdir -p $maps_output
 	echo "$dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output"
-	$python_path $cwd/MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output $sex_chroms_to_process --BINNING_RANGE $binning_range
+	$python_path $cwd/MAPS/make_maps_runfile.py $dataset_name $maps_output $macs2_filepath $genomic_feat_filepath $long_bedpe_dir $short_bed_dir $bin_size $chr_count $maps_output $sex_chroms_to_process
 	echo "first"
 	$python_path $cwd/MAPS/MAPS.py $maps_output"maps_"$dataset_name".maps"
 	echo "second"
