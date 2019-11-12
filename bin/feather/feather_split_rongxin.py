@@ -218,7 +218,7 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic, chip_pe
 		command = "bedtools intersect -a " + outdir + "/tempfiles/shrt_vip_bed.cut" + " -b " + outdir + "/tempfiles/chip_peaks.cut" + " -u | wc -l"
 		proc = subprocess.Popen(command, stdout = subprocess.PIPE, shell= True)
 		on_chip = int(proc.stdout.read().decode("utf-8"))
-		command = "wc -l " + chip_peaks
+		command = "wc -l " + outdir + "/tempfiles/shrt_vip_bed.cut"
 		proc = subprocess.Popen(command, shell = True, stdout = subprocess.PIPE)
 		chip_count = int(proc.stdout.read().decode("utf-8").split()[0])
 		on_chip_ratio = float(on_chip) / chip_count
