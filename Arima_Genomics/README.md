@@ -1,12 +1,12 @@
-# Arima MAPS Pipeline for Arima HiChIP with Arima-HiC+ Kit
+# MAPS Pipeline for Arima-HiChIP with Arima-HiC<sup>+</sup> Kit
 
-This pipeline is for analyzing HiChIP data with MAPS and for generating Arima Genomics QC metrics and output data files.  The pipeline runs the normal MAPS algorithm from https://github.com/ijuric/MAPS with some minor changes to the default parameters. These parameters have been optimized by internal benchmarking and have been found to optimize sensitivity and specify.  This pipeline will also generate shallow and deep sequencing QC metrics which can be copied into the Arima-HiChIP_QC_Worsheet.xls for analysis.  Additionally, the pipeline automatically generates metaplots for data QC and archplots of chromatin loops for data analysis.
+This pipeline is for analyzing HiChIP data with MAPS and for generating Arima Genomics QC metrics and output data files.  The pipeline runs the normal MAPS algorithm from https://github.com/ijuric/MAPS with some minor changes to the default parameters. These parameters have been optimized by internal benchmarking and have been found to optimize sensitivity and specificity.  This pipeline will also generate shallow and deep sequencing QC metrics which can be copied into the Arima-HiChIP_QC_Worsheet.xls for analysis.  Additionally, the pipeline automatically generates metaplots for data QC and arc plots of chromatin loops for data visualization.
 
 ## Getting Started
 
-This pipeline is suited for HiChIP from any protocol but optimal results are obtained when using the Arima-HiC+ kit with the Arima-HiChIP protocol.
+This pipeline is suited for HiChIP from any protocol but optimal results are obtained when using the Arima-HiC<sup>+</sup> kit with the Arima-HiChIP protocol.
 
-To order Arima-HiC+ kits, please visit our website:
+To order Arima-HiC<sup>+</sup> kits, please visit our website:
 
 https://arimagenomics.com/
 
@@ -39,7 +39,7 @@ install.packages("argparse")
 - picard 2.6.0, https://broadinstitute.github.io/picard/
 
 
-## Arima Specific outputs
+## Arima Specific Outputs
 
 ### Arima Shallow Sequencing QC
 
@@ -54,20 +54,20 @@ Contents: This file includes QC metrics for assessing the shallow sequencing dat
 ### Arima Deep Sequencing QC
 
 #### [output directory]/Arima_QC_deep.txt
-Contents: This file includes QC metrics for assessing the shallow sequencing data for each HiCHIP library.
+Contents: This file includes QC metrics for assessing the deep sequencing data for each HiCHIP library.
 - Break down of the number of read pairs
 - The number of loops called
 - The breakdown of MAPS reads used for loop calling (AND and XOR reads)
 - Summary statistics of the ChIP peak file used for loop calling
 - The percentage of Short VIP's that overlap the ChIP peaks
 
-### Arima Arch Plots
+### Arima Arc Plots
 
 #### [output directory]/arcplot_and_metaplot/[sample name].arcplot.gz
-- bgzipped archplot file
+- bgzipped arc plot file
 
 #### [output directory]/arcplot_and_metaplot/[sample name].arcplot.gz.tbi
-- tabix index of the bgzipped archplot file
+- tabix index of the bgzipped arc plot file
 
 These files can be viewed in the WashU EpiGenome Browser (http://epigenomegateway.wustl.edu/browser/).  See the Arima-HiChIP Analysis User Guide for more details.
 
