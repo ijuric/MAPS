@@ -4,7 +4,7 @@ MAPS (Model-based Analysis of PLAC-Seq data) pipeline is a a set of multiple scr
 For additional description of MAPS method, check our paper: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006982
 For any questions regarding MAPS please send mail to Ivan Juric ( ivan.juric.gen@gmail.com ) or Ming Hu ( hum@ccf.org )
 
-** MAPS also runs with Arima HiChIP kit using a slightly modified run_pipeline file. Please refer to https://github.com/ijuric/MAPS/Arima_Genomics/README.md for more information **
+**MAPS also runs with Arima HiChIP kit using a slightly modified run_pipeline file. Please refer to https://github.com/ijuric/MAPS/Arima_Genomics/README.md for more information**
 
 ## MAPS pipeline setup
 ### Downloading prerequisites and MAPS pipeline
