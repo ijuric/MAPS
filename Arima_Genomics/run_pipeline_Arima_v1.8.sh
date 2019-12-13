@@ -242,7 +242,7 @@ if [ $plot -eq 1 ]; then
 	if [ ! -f $loop_file ]; then
 		echo -e "No bedpe loop file found, skip generating arcplot files! \n"
 	else
-		Rscript $cwd/bedpe2tabix.R -i $loop_file -t $plots_dir"/"$dataset_name"."$resolution"k."$fdr".arcplot"
+		Rscript $cwd/utils/bedpe2tabix.R -i $loop_file -t $plots_dir"/"$dataset_name"."$resolution"k."$fdr".arcplot"
 		echo -e "Finished making arcplot files! \n"
 	fi
 
