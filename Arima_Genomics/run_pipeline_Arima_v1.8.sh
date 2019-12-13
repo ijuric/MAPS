@@ -50,7 +50,7 @@ organism=[REFERENCE_NAME] # organism of the genomic feature file to be used, opt
 bwa_index=[BWA_REFERENCE_SEQUENCE] # absolute path to the reference genome sequence (.fa) which will be used to derive the BWA indexes as well. Ex: "/home/reference_sequence/hg19.fa"
 threads=[NUMBER_THREADS] # number of threads for MAPS to run on
 
-# Specify the absolute path for genomics feature files below if not default
+# Specify the absolute path for genomics feature files below if you are using different files
 if [ $organism == "mm10" ]; then
     genomic_feat_filepath="$cwd/../Arima_Genomics/genomic_features/mm10_F_GC_M_arima_5Kb_el.txt"
     chr_count=19
