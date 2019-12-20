@@ -1,3 +1,6 @@
+![alt text](https://arimagenomics.com/public/images/header-logo.png "Celebrating Science and Scientist")
+
+
 # MAPS Pipeline for Arima-HiChIP with Arima-HiC<sup>+</sup> Kit
 
 This pipeline is for analyzing HiChIP data with MAPS and for generating Arima Genomics QC metrics and output data files.  The pipeline runs the normal MAPS algorithm from https://github.com/ijuric/MAPS with some minor changes to the default parameters. These parameters have been optimized by internal benchmarking and have been found to optimize sensitivity and specificity.  This pipeline will also generate shallow and deep sequencing QC metrics which can be copied into the Arima-HiChIP_QC_Worsheet.xls for analysis.  Additionally, the pipeline automatically generates metaplots for data QC and arc plots of chromatin loops for data visualization.
@@ -79,6 +82,16 @@ These files can be viewed in the WashU EpiGenome Browser (http://epigenomegatewa
 #### [output directory]/arcplot_and_metaplot/[sample name].metaplot.pdf
 - PDF of Metaplot of all mapped reads overlapping the ChIP peaks used for loop calling.  This file can be used to assess the signal to noise of the HiChIP enrichment
 
+
+## Arima Test Data
+
+Test data to validate proper installation of the Arima MAPS pipeline can be downloaded from: ftp://ftp-arimagenomics.sdsc.edu/pub/MAPS/test_data/
+
+```bash
+wget ftp://ftp-arimagenomics.sdsc.edu/pub/MAPS/test_data/*
+```
+
+Run the pipeline on the Arima-HiChIP test data: H3K27ac_10M_R1.fastq.gz and H3K27ac_10M_R2.fastq.gz.  The file "ENCFF465WTH.bed" is the ChIP peak file to be used for loop calling and the Arima-HiChIP_QC_Worksheet has the expected results from running the pipeline on the test data.
 
 ## Arima Pipeline Version
 
