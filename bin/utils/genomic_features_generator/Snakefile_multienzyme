@@ -1,0 +1,105 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+######### EDIT THIS SECTION #########
+genome="hg19"
+re="MboI"
+bin_size="5Kb"
+outdir="/home/abnousa/temp/genomic_feats/mm10_trial"
+genome_fastq="/home/jurici/MAPS/MAPS_data_files/mm10/BWA_index/mm10_chrAll.fa"
+chrom_sizes="/home/abnousa/software/genomic_features_calculator/mm10/mm10.chrom.size"
+mappability_input="/home/abnousa/software/genomic_features_calculator/mm10/mm10.mapability.bw"
+#####################################
+
+from snakemake.exceptions import MissingInputException
+
+configfile: "config.json"
+
+localrules: RE_cut_multiple, get_fend, merge_map, filter_map, bin_feature
+
+rule all:
+	input:
+		expand("{outdir}/{genome}/{re}/F_GC_M_{re}_{bin_size}_el.txt",genome=[genome],re=[re], bin_size=[bin_size], outdir=[outdir])
+
+rule RE_cut_juice:
+    input:
+        genome_fastq
+    output:
+        "{outdir}/{genome}/{re}/{genome}_{re}.txt"
+    params:
+        cut = config["scripts"]["re_cut_juice"],
+        site = lambda wildcards: config["re"][wildcards.re]["site"]
+    shell:
+        "python {params.cut} -f {input} -s {params.site} -o {output}"
+
+rule RE_cut_multiple:
+    input:
+        genome_fastq
+    output:
+        "{outdir}/{genome}/{re}/all.{re}.cut"
+    params:
+        cut = config["scripts"]["re_cut_multiple"],
+        site = lambda wildcards: config["re"][wildcards.re]["site"],
+        pos = lambda wildcards: config["re"][wildcards.re]["pos"]
+    shell:
+        "python {params.cut} -f {input} -s {params.site} -p {params.pos} -o {output}"
+
+rule get_fend:
+	input:
+		cut = "{outdir}/{genome}/{re}/all.{re}.cut",
+		genome_size = chrom_sizes
+	output:
+		"{outdir}/{genome}/{re}/all.{re}.cut.bed"
+	params:
+		bedtools = config["software"]["bedtools"],
+		frag_size = config["frag_size"]
+	shell:"""
+		awk -vOFS="\\t" '{{print $3,$4,$4,$3"_"$1,"0",$2}}' {input.cut}|{params.bedtools} slop -s -l 0 -r {params.frag_size} -g {input.genome_size} >{output} 
+		"""
+
+rule cal_mapability:
+	input:
+		mapability = mappability_input,
+		fend = "{outdir}/{genome}/{re}/all.{re}.cut.bed"
+	output:
+		"{outdir}/{genome}/{re}/all.{re}.cut.map.tab"
+	params:
+		jobname = "{genome}.{re}.cal_map",
+		bw_avg = config["software"]["bigWigAverageOverBed"]
+	shell:
+		"{params.bw_avg} {input.mapability} {input.fend} {output}"
+
+rule merge_map:
+	input:
+		map = "{outdir}/{genome}/{re}/all.{re}.cut.map.tab",
+		cut = "{outdir}/{genome}/{re}/all.{re}.cut",
+	output:
+		"{outdir}/{genome}/{re}/all.{re}.cut.map"
+	params:
+		merge = config["scripts"]["merge_map"]
+	shell:
+		"""
+		python {params.merge} -c {input.cut} -m {input.map} -o {output} 
+		"""
+
+rule filter_map:
+	input:
+		"{outdir}/{genome}/{re}/all.{re}.cut.map"
+	output:
+		"{outdir}/{genome}/{re}/all.{re}.cut.map.filter"
+	shell:
+		"""
+		awk '$7>0.5' {input} >{output}
+		"""
+
+rule bin_feature:
+	input:
+		feat = "{outdir}/{genome}/{re}/all.{re}.cut.map.filter",
+		genome_size = chrom_sizes
+	output:
+		"{outdir}/{genome}/{re}/F_GC_M_{re}_{bin_size}_el.txt"
+	params:
+		feat2bin = config["scripts"]["feat2bin"],
+		bin_size = "{bin_size}"
+	shell:
+		"python {params.feat2bin} -i {input.feat} -o {output} -b {params.bin_size} -g {input.genome_size}"

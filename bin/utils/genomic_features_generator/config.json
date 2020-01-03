@@ -1,0 +1,32 @@
+{
+	"scripts": {
+		"re_cut": "scripts/restriction_cut.py",
+		"re_cut_multiple": "scripts/restriction_cut_multipleenzyme.py",
+		"re_cut_juice": "scripts/generate_site_positions_yq.py",
+		"merge_map": "scripts/merge_map.py",
+		"feat2bin": "scripts/feature_frag2bin.py"
+	},
+	"software": {
+		"bedtools": "bedtools",
+		"bigWigAverageOverBed": "bigWigAverageOverBed"
+	},
+	"frag_size": "500",
+	"re": {
+		"Hind3": {
+			"site": "AAGCTT",
+			"pos": "1"
+		},
+		"MboI": {
+			"site": "GATC",
+			"pos": "0"
+		},
+		"NcoI": {
+			"site": "CCATGG",
+			"pos": "1"
+		},
+		"arima": {
+			"site": "GATC,GA.TC",
+			"pos": "0,1"
+		}
+	}
+}
