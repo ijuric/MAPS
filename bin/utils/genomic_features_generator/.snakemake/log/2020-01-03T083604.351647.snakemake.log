@@ -1,4 +1,0 @@
-Building DAG of jobs...
-WildcardError in line 60 of /home/abnousa/software/MAPS_fork/MAPS/bin/utils/genomic_features_generator/Snakefile_multienzyme:
-Wildcards in input files cannot be determined from output files:
-'mappability_input'
