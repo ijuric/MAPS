@@ -1,0 +1,90 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	RE_cut_multiple
+	1	all
+	1	bin_feature
+	1	cal_mapability
+	1	filter_map
+	1	get_fend
+	1	merge_map
+	7
+
+[Fri Jan  3 08:38:52 2020]
+localrule RE_cut_multiple:
+    input: /home/jurici/MAPS/MAPS_data_files/mm10/BWA_index/mm10_chrAll.fa
+    output: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut
+    jobid: 5
+    wildcards: outdir=/home/abnousa/temp/genomic_feats/mm10_trial, genome=hg19, re=MboI
+
+[Fri Jan  3 08:41:47 2020]
+Finished job 5.
+1 of 7 steps (14%) done
+
+[Fri Jan  3 08:41:47 2020]
+localrule get_fend:
+    input: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut, /home/abnousa/software/genomic_features_calculator/mm10/mm10.chrom.size
+    output: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.bed
+    jobid: 6
+    wildcards: outdir=/home/abnousa/temp/genomic_feats/mm10_trial, genome=hg19, re=MboI
+
+[Fri Jan  3 08:43:18 2020]
+Finished job 6.
+2 of 7 steps (29%) done
+
+[Fri Jan  3 08:43:18 2020]
+rule cal_mapability:
+    input: /home/abnousa/software/genomic_features_calculator/mm10/mm10.mapability.bw, /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.bed
+    output: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.map.tab
+    jobid: 4
+    wildcards: outdir=/home/abnousa/temp/genomic_feats/mm10_trial, genome=hg19, re=MboI
+
+[Fri Jan  3 08:46:12 2020]
+Finished job 4.
+3 of 7 steps (43%) done
+
+[Fri Jan  3 08:46:12 2020]
+localrule merge_map:
+    input: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.map.tab, /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut
+    output: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.map
+    jobid: 3
+    wildcards: outdir=/home/abnousa/temp/genomic_feats/mm10_trial, genome=hg19, re=MboI
+
+[Fri Jan  3 08:47:11 2020]
+Finished job 3.
+4 of 7 steps (57%) done
+
+[Fri Jan  3 08:47:11 2020]
+localrule filter_map:
+    input: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.map
+    output: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.map.filter
+    jobid: 2
+    wildcards: outdir=/home/abnousa/temp/genomic_feats/mm10_trial, genome=hg19, re=MboI
+
+[Fri Jan  3 08:47:22 2020]
+Finished job 2.
+5 of 7 steps (71%) done
+
+[Fri Jan  3 08:47:22 2020]
+localrule bin_feature:
+    input: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/all.MboI.cut.map.filter, /home/abnousa/software/genomic_features_calculator/mm10/mm10.chrom.size
+    output: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/F_GC_M_MboI_5Kb_el.txt
+    jobid: 1
+    wildcards: outdir=/home/abnousa/temp/genomic_feats/mm10_trial, genome=hg19, re=MboI, bin_size=5Kb
+
+[Fri Jan  3 08:48:03 2020]
+Finished job 1.
+6 of 7 steps (86%) done
+
+[Fri Jan  3 08:48:03 2020]
+localrule all:
+    input: /home/abnousa/temp/genomic_feats/mm10_trial/hg19/MboI/F_GC_M_MboI_5Kb_el.txt
+    jobid: 0
+
+[Fri Jan  3 08:48:03 2020]
+Finished job 0.
+7 of 7 steps (100%) done
+Complete log: /home/abnousa/software/MAPS_fork/MAPS/bin/utils/genomic_features_generator/.snakemake/log/2020-01-03T083852.482504.snakemake.log
