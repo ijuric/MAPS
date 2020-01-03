@@ -9,12 +9,13 @@ In order to use the utility provided here you will need the following:
 3. bigWigAverageOverBed: Can be downloaded from UCSC Genome Browsers "utilites download" page [here](http://hgdownload.soe.ucsc.edu/admin/exe/). Find the directory that matches your operating system (e.g. linux.x86_64/) and then locate the bigWigAverageOverBed file and download it. After download make sure it is runnable by running: `chmod +x bigWigAverageOverBed`.
 If the bedtools and bigWigAverageOverBed are not in your system's path, you should either add them to the path or speficy the complete path in the *config.json* file. Similarly, if the snakemake is not in the path, you should either add it to the path or specify the complete path in the last step mentioned [below](#run_script) when you run the script.
 
-###Data Requirements:
+### Data Requirements:
 To generate a genomic features file, you should have three files ready:
 - genome sequence file (.fa/.fastq file, each chromosome as a separate sequence in the file). These files usually can be downloaded from UCSC genome browser download page or from the encode project.
 - A file containing chromosome sizes for the genome. These files also usually can be obtained from the same place you download the genome file.
 - A *bigwig* file containing the mappability information for the genome. For some genomes these files can be downloaded from sources such as Encode. For the less common/newer genomes, you might need to generate this file yourself by some other software. We have used *gem-mappability* from the [GEM  library] (https://sourceforge.net/projects/gemlibrary/files/gem-library/) with granularity set to 1.  The output file should be converted to bigwig format.
-###How to run:
+
+### How to run:
 1. <a name="step_json"></a>Add the enzyme information in the *config.json*  file (if it is not already there):
   - In the *"re*" section add a new category, giving it a unique name. (the enzyme name?)
   - Specify sequence and cleavage position of the enzyme <sup></sup>[want to know more details on this?](#config_json)</sup></a>.
