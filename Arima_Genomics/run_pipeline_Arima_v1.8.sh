@@ -49,6 +49,7 @@ macs2_filepath=[CHIP_PEAK_FILE] # path to the ChIP peak file that will be used f
 organism=[REFERENCE_NAME] # organism of the genomic feature file to be used, options: "mm9", "mm10", "hg19", and "hg38"
 bwa_index=[BWA_REFERENCE_SEQUENCE] # absolute path to the reference genome sequence (.fa) which will be used to derive the BWA indexes as well. Ex: "/home/reference_sequence/hg19.fa"
 threads=[NUMBER_THREADS] # number of threads for MAPS to run on
+optical_duplicate_distance=[DISTANCE_FOR_OPT_DUPLICATE_TO_BE_CONSIDERED]
 
 # Specify the absolute path for genomics feature files below if you are using different files
 if [ $organism == "mm10" ]; then
@@ -167,7 +168,7 @@ if [ $feather -eq 1 ]; then
 			$cwd/feather/concat_hic.sh  $feather_output $dataset_name $hic_dir "${hic_array[@]}"
 		fi
 	else
-		$python_path $cwd/feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic -a $macs2_filepath
+		$python_path $cwd/feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic -a $macs2_filepath -d $optical_duplicate_distance
 		qc_filename=$feather_output/$dataset_name".feather.qc"
 		temp_qc_file=$feather_output/tempfiles/$dataset_name".feather.qc.modified"
 		#printf "dataset name:\t"$dataset_name"\n" >> $qc_filename

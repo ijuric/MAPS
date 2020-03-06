@@ -21,6 +21,7 @@ length_cutoff=1000
 threads=4
 model="pospoisson" #"negbinom"
 sex_chroms_to_process="NA"
+optical_duplicate_distance=0
 ####################################################################
 ###SET THE VARIABLES AT THIS PORTION ONLY IF 
 ### number_of_datasets > 1 (merging exisitng datasets)
@@ -130,7 +131,7 @@ if [ $feather -eq 1 ]; then
 			$cwd/feather/concat_hic.sh  $feather_output $dataset_name $hic_dir "${hic_array[@]}"
 		fi
 	else
-		$python_path $cwd/feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic -a $macs2_filepath
+		$python_path $cwd/feather/feather_pipe preprocess -o $feather_output -p $dataset_name -f1 $fastq1 -f2 $fastq2 -b $bwa_index -q $mapq -l $length_cutoff -t $threads -c $per_chr -j $generate_hic -a $macs2_filepath -d $optical_duplicate_distance
 		qc_filename=$feather_output/$dataset_name".feather.qc"
 		temp_qc_file=$feather_output/tempfiles/$dataset_name".feather.qc.modified"
 		#printf "dataset name:\t"$dataset_name"\n" >> $qc_filename
