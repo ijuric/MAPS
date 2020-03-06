@@ -13,7 +13,7 @@ If the bedtools and bigWigAverageOverBed are not in your system's path, you shou
 To generate a genomic features file, you should have three files ready:
 - genome sequence file (.fa/.fastq file, each chromosome as a separate sequence in the file). These files usually can be downloaded from UCSC genome browser download page or from the encode project.
 - A file containing chromosome sizes for the genome. These files also usually can be obtained from the same place you download the genome file.
-- A *bigwig* file containing the mappability information for the genome. For some genomes these files can be downloaded from sources such as Encode. For the less common/newer genomes, you might need to generate this file yourself by some other software. We have used *gem-mappability* from the [GEM  library] (https://sourceforge.net/projects/gemlibrary/files/gem-library/) with granularity set to 1.  The output file should be converted to bigwig format.
+- A *bigwig* file containing the mappability information for the genome. For some genomes these files can be downloaded from sources such as Encode. For the less common/newer genomes, you might need to generate this file yourself by some other software. We have used *gem-mappability* from the [GEM  library] (https://sourceforge.net/projects/gemlibrary/files/gem-library/) with read length set to 50.  The output file should be converted to bigwig format.
 
 ### How to run:
 1. <a name="step_json"></a>Add the enzyme information in the *config.json*  file (if it is not already there):
