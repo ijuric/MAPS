@@ -2,13 +2,13 @@
 # coding: utf-8
 
 ######### EDIT THIS SECTION #########
-genome="hg19"
+genome="hg19_10"
 re="MboI"
 bin_size="5Kb"
-outdir="/home/abnousa/temp/genomic_feats/mm10_trial"
-genome_fastq="/home/jurici/MAPS/MAPS_data_files/mm10/BWA_index/mm10_chrAll.fa"
-chrom_sizes="/home/abnousa/software/genomic_features_calculator/mm10/mm10.chrom.size"
-mappability_input="/home/abnousa/software/genomic_features_calculator/mm10/mm10.mapability.bw"
+outdir="/home/abnousa/software/genomic_features_calculator/gm12878_10"
+genome_fastq="/home/abnousa/software/genomic_features_calculator/gm12878_10/GM12878_10.fa"
+chrom_sizes="/home/abnousa/data/genomes/hg19/hg19.chrom.sizes"
+mappability_input="/home/abnousa/software/genomic_features_calculator/hg19/hg19.mapability.bw"
 #####################################
 
 from snakemake.exceptions import MissingInputException

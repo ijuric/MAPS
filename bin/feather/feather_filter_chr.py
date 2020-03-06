@@ -27,7 +27,7 @@ flag_table_proper={(0, 16): (99, 147), (2048, 16): (99, 147), (0, 2064):  (99, 1
 #qseq="K00168:100:HF52YBBXX:4:1101:27580:1103"
 qseq = "K00168:100:HF52YBBXX:4:1101:27336:1103"
 
-def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_file = False):
+def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical_duplicate_distance, to_file = False):
 	sys.stdout = logger.Logger(outdir + "/" + prefix + ".feather.log")
 	print(time.ctime() + " starting mapping and filtering operation")
 	check_arguments(fastq1, fastq2, bwa_index, mapq, threads)
@@ -57,10 +57,16 @@ def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_fil
 	pysam.merge("-n", "-f",  combined_bwa_filename, bwa1_sorted_filename, bwa2_sorted_filename)
 	print(time.ctime() + " filtering and pairing reads")
 	filter_pair_reads(combined_bwa_filename, mapq, paired_filename, qc_filename)
-	print(time.ctime() + " paired bam file generated. Sorting by coordinates.")
-	pysam.sort("-o", paired_filename + ".srt.bam", "-@", str(threads), paired_filename + ".bam")
-	print(time.ctime() + " calling samtools rmdup")
-	pysam.rmdup(paired_filename + ".srt.bam", paired_filename + ".rmdup.bam")
+	print(time.ctime() + " paired bam file generated. Calling fixmate")
+	print(paired_filename)
+	print(os.path.isfile(paired_filename + ".bam")) 
+	pysam.fixmate("-m", "-@", str(threads), (paired_filename + ".bam"), (paired_filename + ".fixmated.bam"))
+	print(time.ctime() + " sorting by coordinates.")
+	pysam.sort("-o", paired_filename + ".srt.bam", "-@", str(threads), paired_filename + ".fixmated.bam")
+	print(time.ctime() + " calling samtools markdup")
+	#pysam.rmdup(paired_filename + ".srt.bam", paired_filename + ".rmdup.bam")
+	proc = subprocess.Popen(" ".join(["samtools markdup", "-r -m s -s -f", paired_filename + ".fixmated.markdup.stats", "-@", str(threads), "-d", str(optical_duplicate_distance), paired_filename + ".srt.bam", paired_filename + ".rmdup.bam"]), shell = True)
+	proc.communicate()
 	#proc = subprocess.Popen(["samtools", "rmdup", paired_filename + ".srt.bam", paired_filename + ".rmdup.bam"])
 	#proc.communicate()
 	print(time.ctime() + " calling samtools flagstat on mapped file")

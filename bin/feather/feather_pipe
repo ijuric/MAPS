@@ -23,6 +23,7 @@ split_filename = ""
 per_chr_bedpe = "1"
 generate_hic = "1"
 chip_peaks = None
+optical_duplicate_distance = 0
 
 def main():
 	parser = setup_arg_parsers()
@@ -36,7 +37,7 @@ def main():
 		os.makedirs(outdir)
 	if cmd == "map":
 		from feather_filter_chr import filter_main
-		filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_file = True)
+		filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical_duplicate_distance, to_file = True)
 		#write_bam_from_samstr(filter_output_sam, outdir + "/" + prefix + ".pairs.filtered.bam")
 		#proc = subprocess.Popen(["samtools", "view", "-bh"],# "-o", outdir + "/" + prefix + ".pairs.filtered.bam"],
 		#	stdin = input_tempfile, stdout = subprocess.PIPE)
@@ -49,7 +50,7 @@ def main():
 	elif cmd == "preprocess":
 		from feather_filter_chr import filter_main
 		from feather_split_rongxin import split_main
-		filter_output_filename = filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, to_file = False)
+		filter_output_filename = filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical_duplicate_distance, to_file = False)
 		split_main(filter_output_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic, chip_peaks)
 
 def parse_args(parser):
@@ -87,6 +88,7 @@ def set_filter_parser_args(parser):
 	parser.add_argument("-b", "--bwa-index", help = "genome index for running bwa")
 	parser.add_argument("-q", "--mapq", help = "MAPQ threshold", type = int)
 	parser.add_argument("-t", "--threads", help = "number of threads to use", type = int)
+	parser.add_argument("-d", "--optical-duplicate-distance", help = "distance for optical duplicate removal", type = int)
 	#parser.add_argument("-m", "--max-mem", help = "Maximum memory available per thread")
 	#parser.add_argument("-j", "--generate-hic", help = "Generate .hic file", type = str2bool, nargs = '?', const = True, default = generate_hic)
 
@@ -105,6 +107,7 @@ def set_preproc_parser_args(parser):
 	parser.add_argument("-q", "--mapq", help = "MAPQ threshold", type = int)
 	parser.add_argument("-l", "--length-threshold", help = "length threshold for long/short splitting", type = int)
 	parser.add_argument("-t", "--threads", help = "number of threads to use", type = int)
+	parser.add_argument("-d", "--optical", help = "distance for optical duplicate removal", type = int)
 	#parser.add_argument("-m", "--max-mem", help = "Maximum memory available per thread")
 	parser.add_argument("-c", "--per-chr-bedpe", help = "generate one bedpe file for each chromosome",
 				type = str2bool, nargs = '?', const = True, default = per_chr_bedpe)
