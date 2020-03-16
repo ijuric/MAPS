@@ -1,0 +1,2 @@
+Sample Name	Raw PE Reads	Mapped Reads	% Mapped Reads	PCR Dups	% PCR Dups	Optical Dups	% Optical Dups	Mapped and De-duped	% Mapped and De-duped	Target Raw PE Reads	LR FRIPS per Peak Bin per Million Deduped PE Reads	LR FRIPS per Peak Bin	INTRA pairs	% INTRA pairs	INTRA > 15kb pairs	% INTRA > 15kb pairs	INTER pairs	% INTER pairs	ChIP Peaks	Peak Bins	Short VIPs	Short VIPs in Peaks	% Short VIPs in Peaks
+Arima-MAPS-test	5000000	4406271	88.1	302367	6.9	0	0.0	4103904	82.1	170000000	8.15	33.5	3707270	90.3	1473943	35.9	396606	9.7	48983	29592	1206029	972207	80.6

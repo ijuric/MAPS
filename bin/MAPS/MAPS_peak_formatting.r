@@ -26,5 +26,5 @@ peaks$bin2_end = peaks$bin2_mid + RESOLUTION
 peaks_final = subset(peaks, select = c("chr", "bin1_mid", "bin1_end", "chr", "bin2_mid", "bin2_end", "count", "expected2", "fdr", "lab", "ClusterSize", "ClusterType", "NegLog10P", "summit"))
 colnames(peaks_final) = c('chr1', 'start1', 'end1', 'chr2', 'start2', 'end2', 'count', 'expected', 'fdr', 'ClusterLabel', 'ClusterSize', 'ClusterType', 'ClusterNegLog10P', 'ClusterSummit')
 
-fout = paste(INDIR,SET,'.',FDR,'.peaks.bedpe',sep='')
+fout = paste(INDIR,SET,'.',FDR,'.sig3Dinteractions.bedpe',sep='')
 write.table(peaks_final, fout, row.names = FALSE, col.names = TRUE, quote=FALSE, sep='\t')

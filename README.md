@@ -26,7 +26,7 @@ R Packages:
   * VGAM package (v1.0.5)
   * data.table package (v1.11.2)
   * bedtools (v2.27.1)
-  * Samtools(v1.7 or later)
+  * Samtools(v1.10 or later)
   * Bwa (v0.7.12)
 
 **Juicer tools (needed only if you want .hic file; in feather dir on github)**
@@ -112,7 +112,7 @@ chr15	1300000
 ### Running MAPS
 Run appropriately set up run_pipeline script
 ## MAPS Output
-MAPS generates multiple files. Main output is .peaks.bedpe file which contains the list of significant 3D interactions in .bedpe format.
+MAPS generates multiple files. Main output is .sig3Dinteractions.bedpe file (used to be .peaks.bedpe) which contains the list of significant 3D interactions in .bedpe format.
 
 * chr1
   * bin1 chromosome
