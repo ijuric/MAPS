@@ -1,0 +1,3 @@
+-duplicate removal has switched to samtools markdup (allows optical dup removal)
+-test data has been added to Arima pipeline
+-final output is renamed to sig3Dinteractions.bedpe instead of peaks.bedpe

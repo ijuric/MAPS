@@ -23,7 +23,7 @@ split_filename = ""
 per_chr_bedpe = "1"
 generate_hic = "1"
 chip_peaks = None
-optical_duplicate_distance = 0
+optical = 0
 
 def main():
 	parser = setup_arg_parsers()
@@ -37,7 +37,7 @@ def main():
 		os.makedirs(outdir)
 	if cmd == "map":
 		from feather_filter_chr import filter_main
-		filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical_duplicate_distance, to_file = True)
+		filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical, to_file = True)
 		#write_bam_from_samstr(filter_output_sam, outdir + "/" + prefix + ".pairs.filtered.bam")
 		#proc = subprocess.Popen(["samtools", "view", "-bh"],# "-o", outdir + "/" + prefix + ".pairs.filtered.bam"],
 		#	stdin = input_tempfile, stdout = subprocess.PIPE)
@@ -50,7 +50,7 @@ def main():
 	elif cmd == "preprocess":
 		from feather_filter_chr import filter_main
 		from feather_split_rongxin import split_main
-		filter_output_filename = filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical_duplicate_distance, to_file = False)
+		filter_output_filename = filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical, to_file = False)
 		split_main(filter_output_filename, outdir, prefix, length_threshold, per_chr_bedpe, generate_hic, chip_peaks)
 
 def parse_args(parser):
