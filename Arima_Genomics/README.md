@@ -33,50 +33,61 @@ The Arima genomic_features files and run_pipeline_Arima_v1.9.sh will be in the "
 curl -O https://repo.anaconda.com/archive/Anaconda3-2019.07-Linux-x86_64.sh
 chmod 777 Anaconda3-2019.07-Linux-x86_64.sh
 ./Anaconda3-2019.07-Linux-x86_64.sh
-source ~/anaconda3/bin/activate
-conda init
 # read the user agreement and answer yes. install Anaconda3 in the default location which is your home folder.
 ```
 
-- deeptools (v3.3.0), https://deeptools.readthedocs.io/en/develop/content/installation.html
+- deeptools (v3.3.0 or later), https://deeptools.readthedocs.io/en/develop/content/installation.html
 
 ```
 conda install -c bioconda deeptools
 ```
 
-- pandas (v0.20.3)
+- pandas (v0.20.3 or later)
 
 ```
-conda install pandas=0.20.3
+conda install pandas
 ```
 
-- numpy (v1.13.1)
+- numpy (v1.13.1 or later)
 
 ```
-conda install numpy=1.13.1
+conda install numpy
 ```
 
-- pysam (v0.15.2),
+- pysam (v0.15.2 or later),
 
 ```
 conda install pysam
 ```
 
-- pybedtools (v0.8.0),
+- pybedtools (v0.8.0 or later),
 
 ```
 conda install --channel conda-forge --channel bioconda pybedtools
 ```
 
-#### R 3.4.3
+#### R 3.4.s or later
 
-- argparse (v2.0.1)
+- argparse (v2.0.1), https://cran.r-project.org/web/packages/argparse/index.html
 
 ```
 # in R
 install.packages("argparse")
 ```
 
+- VGAM (v1.1-2), https://cran.r-project.org/web/packages/VGAM/index.html
+
+```
+# in R
+install.packages("VGAM")
+```
+
+- data.table (v1.12.8), https://cran.r-project.org/web/packages/data.table/index.html
+
+```
+# in R
+install.packages("data.table")
+```
 
 #### Other
 
@@ -85,8 +96,9 @@ install.packages("argparse")
 ```
 wget https://github.com/arq5x/bedtools2/archive/v2.27.1.tar.gz
 tar -zxvf v2.27.1.tar.gz
-cd bedtools2
+cd bedtools2-2.27.1/
 make
+export PATH=/path/to/bedtools/bin:$PATH
 ```
 
 - HTSLIB (v1.10.2), http://www.htslib.org/download/
@@ -94,7 +106,7 @@ make
 ```
 wget https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2
 tar -vxjf htslib-1.10.2.tar.bz2
-cd ~/htslib-1.10.2/
+cd htslib-1.10.2/
 ./configure --prefix=/where/to/install
 make
 make install
@@ -106,7 +118,7 @@ export PATH=/where/to/install/bin:$PATH
 ```
 wget https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2
 tar -vxjf samtools-1.10.tar.bz2
-cd ~/samtools-1.10/
+cd samtools-1.10/
 ./configure --prefix=/where/to/install
 make
 make install
@@ -123,6 +135,16 @@ cd bcftools-1.10.2
 make
 make install
 export PATH=/where/to/install/bin:$PATH
+```
+
+- bwa (v0.7.17) http://manpages.ubuntu.com/manpages/bionic/man1/bwa.1.html
+
+```
+wget https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/bwa/0.7.17-1ubuntu0.1/bwa_0.7.17.orig.tar.gz
+tar xvzf bwa_0.7.17.orig.tar.gz
+cd bwa-0.7.17/
+make
+export PATH=/path/to/install/bwa-0.7.17/:$PATH
 ```
 
 ## Arima Specific Outputs
@@ -168,9 +190,15 @@ These files can be viewed in the WashU EpiGenome Browser (http://epigenomegatewa
 
 ## Arima Test Data
 
-Test data to validate proper installation of the Arima MAPS pipeline can be found in [PATH_TO_MAPS]/MAPS/Arima_Genomics/test_data/ and includes:
+Test data to validate proper installation of the Arima MAPS pipeline can downloaded from our ftp site by running the following command:
+
+```
+wget ftp://ftp-arimagenomics.sdsc.edu/pub/MAPS/test_data/*
+```
+
+The Download includes:
 - Test dataset (5M paired-reads) Arima-MAPS-test_R1.fastq.gz and Arima-MAPS-test_R1.fastq.gz
-- ChIP peak file to be used to analysis the above data using the Arima-MAPS pipeline: ENCFF247YHM.UW.bed
+- ChIP peak file to be used to analyze the above data using the Arima-MAPS pipeline: ENCFF247YHM.UW.bed
 - QC tables output by Arima-MAPS: Arima-MAPS-test_Arima_QC_shallow.txt and Arima-MAPS-test_Arima_QC_deep.txt as well as the same data in the Arima-HiChIP QC Worksheet that accompanies the Arima-HiChIP User Guide for Mammalian cell lines: Arima-HiChIP_QC_Worksheet_MAPS1.9_Test_data.xlsx
 - Heatmap and Metaplot output by Arima-MAPS: Arima-MAPS-test.heatmap.pdf
 - 1-D ChIP enrichment signal output by Arima-MAPS: Arima-MAPS-test.coverage.bigwig

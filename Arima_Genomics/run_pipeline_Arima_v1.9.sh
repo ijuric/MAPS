@@ -19,8 +19,8 @@
 
 # Dependencies:
 
-# Python 3.4 (or later): pandas (v0.20.3), numpy (v1.13.1), itertools (v3.2), pysam (v0.15.2), pybedtools (v0.8.0), deeptools (v3.3.0)
-# R 3.4.3: argparse (R package, v2.0.1)
+# Python 3.4 (or later): pandas (v0.20.3 or later), numpy (v1.13.1 or later), itertools (v3.2), pysam (v0.15.2 or later), pybedtools (v0.8.0 or later), deeptools (v3.3.0 or later)
+# R 3.4.3 packages: argparse (v2.0.1), VGAM (v1.1-2), data.table (v1.12.8)
 # other: bedtools (v2.27.1), htslib (v1.10), samtools (v1.10), bcftools (v1.10).
 
 # see https://github.com/ijuric/MAPS/tree/master/Arima_Genomics/README.md for installation help
@@ -223,7 +223,7 @@ fi
 
 echo -e "\nPost-processing by Arima Genomics ..."
 
-loop_file=$maps_output"/"$dataset_name"."$resolution"k."$fdr".peaks.bedpe"
+loop_file=$maps_output"/"$dataset_name"."$resolution"k."$fdr".sig3Dinteractions.bedpe"
 
 if [ -f "$loop_file" ]; then
 	total_loops=`grep -v "start1" $loop_file | wc -l`
@@ -328,7 +328,8 @@ pairs_mapped_deduped_p=`echo "scale=4; 100 * $pairs_mapped_deduped / $pairs_raw"
 reads_all_duplicates=$(cat $dup_stats | grep -P "DUPLICATE PAIR:" | cut -d' ' -f3)
 pairs_all_duplicates=$(( $reads_all_duplicates / 2 ))
 pairs_all_duplicates_p=`echo "scale=4; 100 * $pairs_all_duplicates / $pairs_uniq_mapped_MAPQ_ge_30" | bc | awk '{ printf("%.1f", $0) }'`
-pairs_opt_duplicates=$(cat $dup_stats | grep -P "DUPLICATE PAIR OPTICAL:" | cut -d' ' -f4)
+reads_opt_duplicates=$(cat $dup_stats | grep -P "DUPLICATE PAIR OPTICAL:" | cut -d' ' -f4)
+pairs_opt_duplicates=$(( $reads_opt_duplicates / 2 ))
 pairs_opt_duplicates_p=`echo "scale=4; 100 * $pairs_opt_duplicates / $pairs_uniq_mapped_MAPQ_ge_30" | bc | awk '{ printf("%.1f", $0) }'`
 pairs_PCR_duplicates=$(($pairs_all_duplicates - $pairs_opt_duplicates))
 pairs_PCR_duplicates_p=`echo "scale=4; 100 * $pairs_PCR_duplicates / $pairs_uniq_mapped_MAPQ_ge_30" | bc | awk '{ printf("%.1f", $0) }'`
