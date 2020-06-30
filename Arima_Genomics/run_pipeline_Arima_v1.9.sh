@@ -144,33 +144,17 @@ if [ $feather -eq 1 ]; then
 	if [ $number_of_datasets -ge 2 ]; then
 		ds_array=()
 		hic_array=()
-		qc_array=()
-		qc_filename=$feather_output/$dataset_name".feather.qc"
 		for i in `seq $number_of_datasets`
-		do
-			ds_name="dataset$i"
-			hic_name="$ds_name/$hic_dir"
-			#printf "$dataset1"
-			#printf "$ds_name\n"
-			eval ds=\$$ds_name
-			eval hic=\$$hic_name
-			qc_file=$(ls $ds/*.qc.tsv)
-			awk 'FNR == 3 {rmdup=$2}; FNR == 4 {intra=$2}; {a[FNR]=$1; b[FNR]=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) if (i != 12 && i != 13) {print a[i], b[i], c[i]} else {if( i== 12) {print a[i], b[i]*rmdup, c[i]}else{print a[i], b[i]*intra, c[i]}}}' $qc_file > $qc_filename".s"$i
-			#echo $qc_file >> $qc_filename".s"$i
-			#printf "$ds\n"
-			ds_array+=($ds)
-			hic_array+=($hic)
-			qc_array+=($qc_filename".s"$i)
-			#printf "$i\n"
-			#printf '%s\n' "${ds_array[@]}"
-			#printf '%s\n' "${hic_array[@]}"
-			#printf '%s\n' "${qc_array[@]}"
-		done
-		#printf '%s\n' "${qc_array[@]}"
-		$cwd/feather/concat_bedfiles.sh $feather_output $dataset_name "${ds_array[@]}"
-		awk '{a[FNR]=$1; b[FNR]+=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) print a[i], b[i], c[i]}' "${qc_array[@]}" > $qc_filename"_tmp"
-		awk 'FNR == 3 {rmdup=$2}; FNR == 4 {intra=$2}; {a[FNR]=$1; b[FNR]=$2; c[FNR]=$3} END{for (i=1; i<=FNR; i++) if (i != 12 && i != 13) {print a[i], b[i], c[i]} else {if( i == 12) {print a[i], b[i]/rmdup, c[i]}else{print a[i], b[i]/intra, c[i]}}}' $qc_filename"_tmp" > $qc_filename".tsv"
-		sed -i 's/ /\t/g' $qc_filename".tsv"
+                do
+                        ds_name="dataset$i"
+                        hic_name="$ds_name/$hic_dir"
+                        eval ds=\$$ds_name
+                        eval hic=\$$hic_name
+                        ds_array+=($ds)
+                        hic_array+=($hic)
+                done
+                #printf '%s\n' "${qc_array[@]}"
+                $python_path $cwd/feather/combine_feathers.py -o $feather_output -p $dataset_name -a $macs2_filepath -d "${ds_array[@]}"
 		if [ $generate_hic -eq 1 ]; then
 			echo "$feather_output/$hic_dir"
 			mkdir -p $feather_output"/"$hic_dir
