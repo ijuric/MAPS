@@ -2,13 +2,13 @@
 # coding: utf-8
 
 ######### EDIT THIS SECTION #########
-genome="hg19_10"
-re="MboI"
+genome="hg38"
+re="MNase"
 bin_size="5Kb"
-outdir="/home/abnousa/software/genomic_features_calculator/gm12878_10"
-genome_fastq="/home/abnousa/software/genomic_features_calculator/gm12878_10/GM12878_10.fa"
-chrom_sizes="/home/abnousa/data/genomes/hg19/hg19.chrom.sizes"
-mappability_input="/home/abnousa/software/genomic_features_calculator/hg19/hg19.mapability.bw"
+outdir="/home/abnousa/software/genomic_features_calculator/hg38_MNase"
+genome_fastq="/home/abnousa/software/genomic_features_calculator/hg38/hg38.fa"
+chrom_sizes="/home/abnousa/software/genomic_features_calculator/hg38/hg38.chrom.size"
+mappability_input="/home/abnousa/software/genomic_features_calculator/hg38/hg38.mapability.bw"
 #####################################
 
 from snakemake.exceptions import MissingInputException
@@ -34,15 +34,16 @@ rule RE_cut_juice:
 
 rule RE_cut_multiple:
     input:
-        genome_fastq
+        input = genome_fastq
     output:
         "{outdir}/{genome}/{re}/all.{re}.cut"
     params:
         cut = config["scripts"]["re_cut_multiple"],
         site = lambda wildcards: config["re"][wildcards.re]["site"],
-        pos = lambda wildcards: config["re"][wildcards.re]["pos"]
+        pos = lambda wildcards: config["re"][wildcards.re]["pos"],
+        bin_size = bin_size
     shell:
-        "python {params.cut} -f {input} -s {params.site} -p {params.pos} -o {output}"
+        "python {params.cut} -f {input} -s {params.site} -p {params.pos} -o {output} -b {params.bin_size}"
 
 rule get_fend:
 	input:
