@@ -42,7 +42,7 @@ def main():
                 feature_frag[key].append(value)
             except KeyError:
                 feature_frag[key] = [value]
-    print(list(feature_frag.keys())[1:5])
+    #print(list(feature_frag.keys())[1:5])
     with open(args.outfile,'w') as f:
         for chr_name in sorted(g_size.keys(),key=lambda i:i[2:]):
             for bin_num in range(int(g_size[chr_name]/bin_size+1)):
@@ -51,6 +51,7 @@ def main():
                     #print(key)
                     xtmp = feature_frag['\t'.join([chr_name,str(bin_num)])]
                     #print("found")
+                    #print(len(xtmp))
                     xtmplen = list(set([i[0] for i in xtmp]))
                     gc = sum([i[1] for i in xtmp]) / len(xtmp)
                     frag_len = sum([i for i in xtmplen if i<1000]) + len([i for i in xtmplen if i>=1000]) * 1000

@@ -27,6 +27,10 @@
 		"arima": {
 			"site": "GATC,GA.TC",
 			"pos": "0,1"
+		},
+		"MNase": {
+			"site": "mnase",
+			"pos": "none"
 		}
 	}
 }
