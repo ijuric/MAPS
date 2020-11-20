@@ -21,10 +21,10 @@ def split_main(input_bam, outdir, prefix, cutoff, per_chr, generate_hic, chip_pe
 	#sys.stdout = logger.Logger(outdir + "/" + prefix + ".feather.log")
 	print(time.ctime() + " starting the splitting operation")
 	flagstat_filename = glob.glob(outdir + "/*.rmdup.flagstat")
-	if chip_peaks is not None:
+	if chip_peaks:
 		chip_peaks = glob.glob(chip_peaks)
 	else:
-		chip_peaks = []
+		chip_peaks = ""
 	if len(flagstat_filename) > 0 and len(chip_peaks) > 0:
 		flagstat_filename = flagstat_filename[0]
 		chip_peaks = chip_peaks[0]

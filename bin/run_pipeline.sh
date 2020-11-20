@@ -1,6 +1,6 @@
 #!/bin/bash
 python_path=/home/abnousa/software/python3.6.5/bin/python #should have pysam, pybedtools installed. bedtools, samtools should be in the path
-Rscript_path=/opt/R-3.4.3/lib64/R/bin/Rscript
+Rscript_path=/opt/R-3.5.0/bin/Rscript
 ###################################################################
 feather=1 #start from feather or run only MAPS
 maps=1
