@@ -389,7 +389,7 @@ if [ $feather -eq 1 ]; then
 			if [ $peak_type == "broad" ]; then
 				macs2 callpeak -t $shortVIP_BAM -n $dataset_name -g $genome --broad --nolambda --broad-cutoff 0.3 --outdir $outdir/MACS2_peaks/
 			elif [ $peak_type == "narrow" ]; then
-				macs2 callpeak -t $shortVIP_BAM -n $dataset_name -g $genome --broad --broad-cutoff 0.3 --outdir $outdir/MACS2_peaks/
+				macs2 callpeak -t $shortVIP_BAM -n $dataset_name -g $genome --broad --broad-cutoff 0.2 --outdir $outdir/MACS2_peaks/
 			fi
 			rm $outdir/MACS2_peaks/${dataset_name}_peaks.gappedPeak
 			macs2_filepath=$outdir/MACS2_peaks/${dataset_name}_peaks.broadPeak
