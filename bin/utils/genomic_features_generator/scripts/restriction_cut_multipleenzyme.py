@@ -30,9 +30,9 @@ def find_site(fasta,seq,outfile,pos, binsize):
     site_pos = []
     site_size = []
     for seq_record in SeqIO.parse(fasta, "fasta"):
-        sys.stderr.write("processing "+ str(mnase)+"\n")
-        sys.stderr.write("processing "+seq_record.id+"\n")
-        sys.stderr.write("processing "+str(len(seq_record.seq))+" "+str(binsize)+"\n")
+        #sys.stderr.write("processing "+ str(mnase)+"\n")
+        #sys.stderr.write("processing "+seq_record.id+"\n")
+        #sys.stderr.write("processing "+str(len(seq_record.seq))+" "+str(binsize)+"\n")
         if not mnase:
             sys.stderr.write("processing "+seq_record.id+"\n")
             #print(seq_record.seq[3000181: (3000185 + 30)])
@@ -94,7 +94,7 @@ def main():
     parser.add_argument("-s", "--seq", dest="seq",required=True,help="RE cut sequence")
     parser.add_argument("-o", "--out", dest="outfile",required=True,help="Output file")
     parser.add_argument("-p", "--pos", dest="pos",required=True,help="RE cut position")
-    parser.add_argument("-b", "--binsize", dest = "binsize", required = False, help = "bin size for MNase-based", default = 5000)
+    parser.add_argument("-b", "--binsize", dest = "binsize", required = False, help = "bin size for MNase-based", default = "5Kb")
     args = parser.parse_args()
     bin_size = args.binsize.replace('Kb','000')
     bin_size = bin_size.replace('Mb','000000')
