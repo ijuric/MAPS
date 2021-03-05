@@ -271,7 +271,7 @@ These files can be viewed in the WashU EpiGenome Browser (http://epigenomegatewa
 Test data to validate proper installation of the Arima MAPS pipeline can downloaded from our ftp site by running the following command:
 
 ```
-wget ftp://ftp-arimagenomics.sdsc.edu/pub/MAPS/test_data/*
+wget -r ftp://ftp-arimagenomics.sdsc.edu/pub/MAPS/test_data/*
 ```
 
 The Download includes:

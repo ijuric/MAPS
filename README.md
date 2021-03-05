@@ -26,8 +26,9 @@ R Packages:
   * VGAM package (v1.0.5)
   * data.table package (v1.11.2)
   * bedtools (v2.27.1)
-  * Samtools(v1.7 or later)
+  * Samtools(v1.10 or later)
   * Bwa (v0.7.12)
+  * VGAM (v1.1.2)
 
 **Juicer tools (needed only if you want .hic file; in feather dir on github)**
 https://github.com/theaidenlab/juicer/wiki/Download
