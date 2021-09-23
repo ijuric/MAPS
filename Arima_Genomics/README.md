@@ -18,7 +18,7 @@ Refer to the documentation at: https://github.com/ijuric/MAPS for help installin
 git clone https://github.com/ijuric/MAPS.git
 ```
 
-The Arima genomic_features files and run_pipeline_Arima_v2.0.sh will be in the "MAPS/Arima_Genomics/" directory after downloading.
+Please move Arima-MAPS_v2.0.sh from MAPS/Arima_Genomics/ directory to "MAPS/bin/" directory after downloading.
 
 ### Dependencies
 
