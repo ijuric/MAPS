@@ -1,3 +1,9 @@
+# !! An Important Announcement !! 
+March 25th 2022: MAPS has a new home!
+For a newest version check here:
+https://github.com/HuMingLab/MAPS
+
+
 # MAPS pipeline user manual
 ## What is MAPS pipeline?
 MAPS (Model-based Analysis of PLAC-Seq data) pipeline is a a set of multiple scripts used to analyze PLAC-Seq and HiChIP data. MAPS pipeline contains multiple scripts. The run_pipeline.sh is a prototypes of a shell script containing the locations of files needed to run MAPS is entered as well as calls for different MAPS pipeline scripts. Internally, there are two parts of MAPS pipeline. First part, called feather, does mapping and preprocessing of pair-end reads and creates long and short .bed/.bedpe files. Second part, called MAPS, does read binning and peak calling.
