@@ -1,0 +1,481 @@
+Thu May 25 16:11:37 2023 starting mapping and filtering operation
+Thu May 25 16:11:37 2023 calling chromap for /home/hum/021720_backup_ftp_hum-collab/RenBingLab/4DN_JAP/fastq/RH_334_R1.fastq/home/hum/021720_backup_ftp_hum-collab/RenBingLab/4DN_JAP/fastq/RH_334_R2.fastq
+Thu May 25 17:45:32 2023 calling samtools sort for /home/mishras10/MAPS_Plaqseq_chromap_RH334/feather_output/RH_334_20230525_161135/tempfiles/RH_334_R1.fastq.sam storing in /home/mishras10/MAPS_Plaqseq_chromap_RH334/feather_output/RH_334_20230525_161135/tempfiles/RH_334_R1.fastq.sam.srtn
+Thu May 25 18:06:56 2023 merging /home/mishras10/MAPS_Plaqseq_chromap_RH334/feather_output/RH_334_20230525_161135/tempfiles/RH_334_R1.fastq.sam.srtn
+Thu May 25 18:35:07 2023 sorting by coordinates.
+Thu May 25 18:47:26 2023 calling samtools markdup
+Thu May 25 18:55:50 2023 calling samtools flagstat on mapped and duplicate-removed file
+Thu May 25 19:17:11 2023 starting the splitting operation
+Thu May 25 19:17:11 2023 QC metrics will be computed from: /home/hum/021720_backup_ftp_hum-collab/RenBingLab/4DN_JAP/1D_anchor/ENCFF456NIF.bed and /home/mishras10/MAPS_Plaqseq_chromap_RH334/feather_output/RH_334_20230525_161135/RH_334.paired.rmdup.flagstat
+Thu May 25 20:12:52 2023 generating long, intra-chromosomal bedpe file(s)
+Thu May 25 20:25:00 2023 writing to the combined bedpe file
+Thu May 25 20:37:27 2023 splitting completed
+RH_334 /home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/ /home/hum/021720_backup_ftp_hum-collab/RenBingLab/4DN_JAP/1D_anchor/ENCFF456NIF.bed /home/mishras10/MAPS/bin/../MAPS_data_files/hg38/genomic_features/F_GC_M_MboI_10Kb_el.GRCh38.txt /home/mishras10/MAPS_Plaqseq_chromap_RH334/feather_output/RH_334_current/ /home/mishras10/MAPS_Plaqseq_chromap_RH334/feather_output/RH_334_current/ 10000 22 /home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/
+first
+loading parameters file
+['chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10', 'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19', 'chr20', 'chr21', 'chr22']
+['chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10', 'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19', 'chr20', 'chr21', 'chr22']
+loading MACS2 peaks
+loading metadata file
+doing chromosome  chr1 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr2 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr3 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr4 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr5 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr6 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr7 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr8 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr9 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr10 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr11 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr12 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr13 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr14 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr15 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr16 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr17 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr18 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr19 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr20 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr21 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+doing chromosome  chr22 
+
+-- handling MACS2 peaks
+-- handling short.bed
+
+-- handling long.bedpe
+
+-- calculating values for maps.qc file
+
+-- handling metadata
+
+-- attaching genome features atributes to AND set
+-- attaching genome features atributes to XOR set
+--saving output
+
+-- saving .qc.maps file
+
+second
+Loading required package: stats4
+Loading required package: splines
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/"
+[2] "RH_334.10k"                                                                    
+[3] "10000"                                                                         
+[4] "22"                                                                            
+[5] "None"                                                                          
+[6] "pospoisson"                                                                    
+[1] "filter used (if any):"
+[1] "None"
+[1] "loading chromosome chr1 .and"
+[1] "loading chromosome chr1 .xor"
+[1] "loading chromosome chr2 .and"
+[1] "loading chromosome chr2 .xor"
+[1] "loading chromosome chr3 .and"
+[1] "loading chromosome chr3 .xor"
+[1] "loading chromosome chr4 .and"
+[1] "loading chromosome chr4 .xor"
+[1] "loading chromosome chr5 .and"
+[1] "loading chromosome chr5 .xor"
+[1] "loading chromosome chr6 .and"
+[1] "loading chromosome chr6 .xor"
+[1] "loading chromosome chr7 .and"
+[1] "loading chromosome chr7 .xor"
+[1] "loading chromosome chr8 .and"
+[1] "loading chromosome chr8 .xor"
+[1] "loading chromosome chr9 .and"
+[1] "loading chromosome chr9 .xor"
+[1] "loading chromosome chr10 .and"
+[1] "loading chromosome chr10 .xor"
+[1] "loading chromosome chr11 .and"
+[1] "loading chromosome chr11 .xor"
+[1] "loading chromosome chr12 .and"
+[1] "loading chromosome chr12 .xor"
+[1] "loading chromosome chr13 .and"
+[1] "loading chromosome chr13 .xor"
+[1] "loading chromosome chr14 .and"
+[1] "loading chromosome chr14 .xor"
+[1] "loading chromosome chr15 .and"
+[1] "loading chromosome chr15 .xor"
+[1] "loading chromosome chr16 .and"
+[1] "loading chromosome chr16 .xor"
+[1] "loading chromosome chr17 .and"
+[1] "loading chromosome chr17 .xor"
+[1] "loading chromosome chr18 .and"
+[1] "loading chromosome chr18 .xor"
+[1] "loading chromosome chr19 .and"
+[1] "loading chromosome chr19 .xor"
+[1] "loading chromosome chr20 .and"
+[1] "loading chromosome chr20 .xor"
+[1] "loading chromosome chr21 .and"
+[1] "loading chromosome chr21 .xor"
+[1] "loading chromosome chr22 .and"
+[1] "loading chromosome chr22 .xor"
+[1] "run 1 : regression on chromosome chr1"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr1.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr1.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr2"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr2.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr2.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr3"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr3.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr3.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr4"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr4.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr4.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr5"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr5.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr5.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr6"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr6.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr6.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr7"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr7.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr7.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr8"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr8.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr8.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr9"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr9.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr9.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr10"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr10.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr10.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr11"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr11.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr11.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr12"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr12.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr12.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr13"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr13.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr13.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr14"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr14.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr14.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr15"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr15.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr15.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr16"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr16.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr16.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr17"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr17.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr17.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr18"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr18.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr18.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr19"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr19.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr19.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr20"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr20.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr20.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr21"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr21.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr21.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "run 1 : regression on chromosome chr22"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr22.RH_334.10k.and.MAPS2_pospoisson"
+[1] "/home/mishras10/MAPS_Plaqseq_chromap_RH334/MAPS_output/RH_334_20230525_161135/reg_raw.chr22.RH_334.10k.xor.MAPS2_pospoisson"
+[1] "finding peaks"
+[1] "chromosomes with potential interactions:"
+ [1] "chr1"  "chr2"  "chr3"  "chr4"  "chr5"  "chr6"  "chr7"  "chr8"  "chr9" 
+[10] "chr10" "chr11" "chr12" "chr13" "chr14" "chr15" "chr16" "chr17" "chr18"
+[19] "chr19" "chr20" "chr21" "chr22"
+[1] 70806    31
+[1] "finding singletons"
+[1] "2 : 2"                 "2 : 0.628342159124135"
+third

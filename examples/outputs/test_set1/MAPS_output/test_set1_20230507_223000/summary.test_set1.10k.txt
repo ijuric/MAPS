@@ -1,0 +1,2 @@
+run log10_fdr_cutoff singleton_fraction AND_size AND_mean_dist AND_median_dist AND_min_count AND_max_pval AND_max_fdr XOR_size XOR_mean_dist XOR_median_dist XOR_min_count XOR_max_pval XOR_max_fdr size mean_dist median_dist min_count max_pval max_fdr
+1 2 0.608695652173913 7 145714.285714286 140000 19 1.14524129744118e-18 1.93054961568656e-17 51 383921.568627451 390000 12 0.00110493645410516 0.00945334521845527 58 355172.413793103 345000 12 0.00110493645410516 0.00945334521845527

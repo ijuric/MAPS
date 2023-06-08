@@ -1,0 +1,16 @@
+COMMAND: samtools markdup -r -m s -s -f /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_174535/test_set1.paired.fixmated.markdup.stats -@ 4 -d 0 /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_174535/test_set1.paired.srt.bam /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_174535/test_set1.paired.rmdup.bam
+READ: 57774
+WRITTEN: 56146
+EXCLUDED: 0
+EXAMINED: 57774
+PAIRED: 57774
+SINGLE: 0
+DUPLICATE PAIR: 1628
+DUPLICATE SINGLE: 0
+DUPLICATE PAIR OPTICAL: 0
+DUPLICATE SINGLE OPTICAL: 0
+DUPLICATE NON PRIMARY: 0
+DUPLICATE NON PRIMARY OPTICAL: 0
+DUPLICATE PRIMARY TOTAL: 1628
+DUPLICATE TOTAL: 1628
+ESTIMATED_LIBRARY_SIZE: 502891

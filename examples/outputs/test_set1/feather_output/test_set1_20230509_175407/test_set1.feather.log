@@ -1,0 +1,46 @@
+Tue May  9 17:54:09 2023 starting mapping and filtering operation
+Tue May  9 17:54:09 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq -o /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam
+Tue May  9 17:54:31 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq -o /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam
+Tue May  9 17:54:48 2023 calling samtools sort for /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam storing in /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam.srtn
+Tue May  9 17:54:48 2023 calling samtools sort for /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam storing in /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam.srtn
+Tue May  9 17:54:48 2023 merging /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam.srtn and /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam.srtn
+Tue May  9 17:54:49 2023 filtering and pairing reads
+Tue May  9 17:54:50 2023 paired bam file generated. Calling fixmate
+/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/test_set1.paired
+True
+Tue May  9 17:54:50 2023 sorting by coordinates.
+Tue May  9 17:54:50 2023 calling samtools markdup
+Tue May  9 17:54:50 2023 calling samtools flagstat on mapped file
+Tue May  9 17:54:50 2023 calling samtools flagstat on mapped and duplicate-removed file
+Tue May  9 17:54:51 2023 calling samtools sort for sorting by query names
+Tue May  9 17:54:51 2023 finishing filtering
+Tue May  9 17:54:51 2023 starting the splitting operation
+Tue May  9 17:54:51 2023 QC metrics will be computed from: /home/mishras10/MAPS/examples/test_set1/macs2_peaks_final.replicated.narrowPeak and /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/test_set1.paired.rmdup.flagstat
+Tue May  9 17:54:53 2023 generating long, intra-chromosomal bedpe file(s)
+Tue May  9 17:54:54 2023 writing to the combined bedpe file
+Tue May  9 17:54:54 2023 splitting completed
+Tue May  9 17:54:09 2023 starting mapping and filtering operation
+Tue May  9 17:54:09 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq -o /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam
+Tue May  9 17:54:31 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq -o /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam
+Tue May  9 17:54:48 2023 calling samtools sort for /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam storing in /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam.srtn
+Tue May  9 17:54:48 2023 calling samtools sort for /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam storing in /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam.srtn
+Tue May  9 17:54:48 2023 merging /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R1.fastq.bwa.sam.srtn and /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/tempfiles/test_set1_R2.fastq.bwa.sam.srtn
+Tue May  9 17:54:49 2023 filtering and pairing reads
+Tue May  9 17:54:50 2023 paired bam file generated. Calling fixmate
+/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/test_set1.paired
+True
+Tue May  9 17:54:50 2023 sorting by coordinates.
+Tue May  9 17:54:50 2023 calling samtools markdup
+Tue May  9 17:54:50 2023 calling samtools flagstat on mapped file
+Tue May  9 17:54:50 2023 calling samtools flagstat on mapped and duplicate-removed file
+Tue May  9 17:54:51 2023 calling samtools sort for sorting by query names
+Tue May  9 17:54:51 2023 finishing filtering
+Tue May  9 17:54:51 2023 starting the splitting operation
+Tue May  9 17:54:51 2023 QC metrics will be computed from: /home/mishras10/MAPS/examples/test_set1/macs2_peaks_final.replicated.narrowPeak and /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_175407/test_set1.paired.rmdup.flagstat
+Tue May  9 17:54:53 2023 generating long, intra-chromosomal bedpe file(s)
+Tue May  9 17:54:54 2023 writing to the combined bedpe file
+Tue May  9 17:54:54 2023 splitting completed

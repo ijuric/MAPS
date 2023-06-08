@@ -1,0 +1,10 @@
+Tue May  9 15:20:42 2023 starting mapping and filtering operation
+Tue May  9 15:20:42 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq -o <_io.TextIOWrapper name='/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_152040/tempfiles/test_set1_R1.fastq.bwa.sam' mode='w' encoding='UTF-8'>
+Tue May  9 15:21:03 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq -o <_io.TextIOWrapper name='/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_152040/tempfiles/test_set1_R2.fastq.bwa.sam' mode='w' encoding='UTF-8'>
+Tue May  9 15:20:42 2023 starting mapping and filtering operation
+Tue May  9 15:20:42 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq -o <_io.TextIOWrapper name='/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_152040/tempfiles/test_set1_R1.fastq.bwa.sam' mode='w' encoding='UTF-8'>
+Tue May  9 15:21:03 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R2.fastq -o <_io.TextIOWrapper name='/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_152040/tempfiles/test_set1_R2.fastq.bwa.sam' mode='w' encoding='UTF-8'>

@@ -1,0 +1,6 @@
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 103072 sequences (10281068 bp)...
+[M::mem_process_seqs] Processed 103072 reads in 43.385 CPU sec, 10.976 real sec
+[main] Version: 0.7.17-r1198-dirty
+[main] CMD: bwa mem -t 4 /home/mishras10/mm10.fa /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+[main] Real time: 14.146 sec; CPU: 46.353 sec

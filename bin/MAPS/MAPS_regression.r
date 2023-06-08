@@ -69,11 +69,13 @@ for (i in chroms) {
         mm$chrom = i
         mm = mm [ abs(mm$bin1_mid - mm$bin2_mid) > 1,]  ## removing adjacent bins
         mm = subset(mm, !(mm$chrom %in% fltr$chrom & mm$bin1_mid %in% fltr$bin | mm$bin2_mid %in% fltr$bin )) ## filtering out bad bins
-        fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = pospoisson(), data = mm)
+        print("here")
+	fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = pospoisson(), data = mm)
         mm$expected = fitted(fit)
         mm$p_val = ppois(mm$count, mm$expected, lower.tail = FALSE, log.p = FALSE) / ppois(0, mm$expected, lower.tail = FALSE, log.p = FALSE)
         m1 = mm[ mm$p_val > 1/length(mm$p_val),]
-        fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = pospoisson(), data = m1)
+        print("here1")
+	fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = pospoisson(), data = m1)
         coeff<-round(coef(fit),10)
         #m1$expected2 = fitted(fit)
         mm$expected2 <- round(exp(coeff[1] + coeff[2]*mm$logl + coeff[3]*mm$loggc + coeff[4]*mm$logm + coeff[5]*mm$logdist + coeff[6]*mm$logShortCount), 10)

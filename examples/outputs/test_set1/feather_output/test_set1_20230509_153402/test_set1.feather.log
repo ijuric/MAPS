@@ -1,0 +1,6 @@
+Tue May  9 15:34:04 2023 starting mapping and filtering operation
+Tue May  9 15:34:04 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq -o /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_153402/tempfiles/test_set1_R1.fastq.bwa.sam
+Tue May  9 15:34:04 2023 starting mapping and filtering operation
+Tue May  9 15:34:04 2023 calling bwa for /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+~/chromap/chromap -x /home/mishras10/mm10.index -r /home/mishras10/mm10.fa -1 /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq -o /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_153402/tempfiles/test_set1_R1.fastq.bwa.sam

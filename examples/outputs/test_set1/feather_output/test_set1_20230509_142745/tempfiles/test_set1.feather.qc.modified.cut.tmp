@@ -1,0 +1,11 @@
+fastq_all	number_of_sequencing_pairs	103072
+mapped	number_of_uniquely_mapped_pairs_(MAPQ_>=_30)	152986
+not_duplicated	number_of_pairs_after_duplicate_removal	148888
+intra_all	number_of_intrachromosomal_pairs	68578
+short_all	number_of_short-range_intrachromosomal_pairs	20429
+short_final	number_of_short-range_vip_pairs	19539
+long_intra	number_of_long-range_intrachromosomal_pairs	48149
+inter_all	number_of_interchromosomal_pairs	5829
+trans_ratio	trans_read_ratio	0.03915
+long_cis_ratio	long_cis_read_ratio	0.70211
+FRiP	FRiP	0.19464

@@ -24,20 +24,28 @@ flag_table_proper={(0, 16): (99, 147), (2048, 16): (99, 147), (0, 2064):  (99, 1
 			(0,  0): (65, 129), (0,  2048): (65, 129), (2048, 0):  (65, 129), (2048, 2048): (65, 129),     # + +
 			(16, 16):(113, 177), (16, 2064):(113, 177), (2064, 16):(113, 177), (2064, 2064):(113, 177),    # - -
 		}
+
+
 #qseq="K00168:100:HF52YBBXX:4:1101:27580:1103"
 qseq = "K00168:100:HF52YBBXX:4:1101:27336:1103"
 
-def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optical_duplicate_distance, to_file = False):
+def filter_main(fastq1, fastq2, bwa_index,bwa_index_fa,chromap_loc, mapq, outdir, prefix, threads, optical_duplicate_distance, to_file = False):
 	sys.stdout = logger.Logger(outdir + "/" + prefix + ".feather.log")
 	print(time.ctime() + " starting mapping and filtering operation")
 	check_arguments(fastq1, fastq2, bwa_index, mapq, threads)
 	paired_filename, bwa1_filename, bwa2_filename, bwa1_sorted_filename, bwa2_sorted_filename, combined_bwa_filename, qc_filename = set_filenames(fastq1, fastq2, outdir, prefix)
 	#running bwa mem
-	for fastq, bwa_filename in [(fastq1, bwa1_filename), (fastq2, bwa2_filename)]:
-		if fastq.endswith(".fastq") or fastq.endswith("fastq.gz") or fastq.endswith("fq") or fastq.endswith("fq.gz"):
-			bwa_mem(fastq, bwa_index, threads, bwa_filename)
-		elif not (fastq.endswith(".sam") or fastq.endswith(".bam")):
+	# for fastq, bwa_filename in [(fastq1, bwa1_filename), (fastq2, bwa2_filename)]:
+		# if fastq.endswith(".fastq") or fastq.endswith("fastq.gz") or fastq.endswith("fq") or fastq.endswith("fq.gz"):
+		# 	bwa_mem(fastq1,fastq2, bwa_index, threads, bwa_filename)
+		# elif not (fastq.endswith(".sam") or fastq.endswith(".bam")):
+		# 	exit("Error: Input file for filtering should be of type fastq, fastq.gz, sam, or bam. Exiting!")
+		
+	if fastq1.endswith(".fastq") or fastq1.endswith("fastq.gz") or fastq1.endswith("fq") or fastq1.endswith("fq.gz"):
+			bwa_mem(fastq1,fastq2, bwa_index,bwa_index_fa,chromap_loc, threads, bwa1_filename)
+	elif not (fastq1.endswith(".sam") or fastq1.endswith(".bam")):
 			exit("Error: Input file for filtering should be of type fastq, fastq.gz, sam, or bam. Exiting!")
+			
 	if bwa1_filename.endswith(".bam"):
 		proc = subprocess.Popen("samtools view " + bwa1_filename + " | awk ' $1 !~ /@/ {print $1}' " + "| uniq -c|wc -l", stdout = subprocess.PIPE, shell = True)
 		read_count = proc.stdout.read().decode("utf-8")
@@ -45,62 +53,84 @@ def filter_main(fastq1, fastq2, bwa_index, mapq, outdir, prefix, threads, optica
 		proc = subprocess.Popen("awk ' $1 !~ /@/ {print $1}' " + bwa1_filename  + "| uniq -c|wc -l", stdout = subprocess.PIPE, shell = True)
 		read_count = proc.stdout.read().decode("utf-8")
 
+	# #pairing and filtering alignments for chimeric reads
+	# for bwa_filename, bwa_sorted_filename in ([bwa1_filename, bwa1_sorted_filename], [bwa2_filename, bwa2_sorted_filename]):
+	# 	bwa = pysam.AlignmentFile(bwa_filename)
+	# 	if not is_sorted_queryname(bwa.header):
+	# 		print(time.ctime() + " calling samtools sort for " + bwa_filename + " storing in " + bwa_sorted_filename)
+	# 		pysam.sort("-o", bwa_sorted_filename , "-n", "-@", str(threads), bwa_filename)
+	# 	else:
+	# 		copyfile(bwa_filename, bwa_sorted_filename)
+	
 	#pairing and filtering alignments for chimeric reads
-	for bwa_filename, bwa_sorted_filename in ([bwa1_filename, bwa1_sorted_filename], [bwa2_filename, bwa2_sorted_filename]):
-		bwa = pysam.AlignmentFile(bwa_filename)
-		if not is_sorted_queryname(bwa.header):
-			print(time.ctime() + " calling samtools sort for " + bwa_filename + " storing in " + bwa_sorted_filename)
-			pysam.sort("-o", bwa_sorted_filename , "-n", "-@", str(threads), bwa_filename)
-		else:
-			copyfile(bwa_filename, bwa_sorted_filename)
-	print(time.ctime() + " merging " + bwa1_sorted_filename + " and " + bwa2_sorted_filename)
-	pysam.merge("-n", "-f",  combined_bwa_filename, bwa1_sorted_filename, bwa2_sorted_filename)
-	print(time.ctime() + " filtering and pairing reads")
-	filter_pair_reads(combined_bwa_filename, mapq, paired_filename, qc_filename)
-	print(time.ctime() + " paired bam file generated. Calling fixmate")
-	print(paired_filename)
-	print(os.path.isfile(paired_filename + ".bam")) 
-	pysam.fixmate("-m", "-@", str(threads), (paired_filename + ".bam"), (paired_filename + ".fixmated.bam"))
+	bwa = pysam.AlignmentFile(bwa1_filename)
+	if not is_sorted_queryname(bwa.header):
+			print(time.ctime() + " calling samtools sort for " + bwa1_filename + " storing in " + bwa1_sorted_filename)
+			pysam.sort("-o", bwa1_sorted_filename , "-n", "-@", str(threads), bwa1_filename)
+	else:
+	  copyfile(bwa1_filename, bwa1_sorted_filename)
+	
+	# print(time.ctime() + " merging " + bwa1_sorted_filename + " and " + bwa2_sorted_filename)
+	# pysam.merge("-n", "-f",  combined_bwa_filename, bwa1_sorted_filename, bwa2_sorted_filename)
+	
+	print(time.ctime() + " merging " + bwa1_sorted_filename)
+	pysam.merge("-n", "-f",  combined_bwa_filename, bwa1_sorted_filename)
+	# 
+	# print(time.ctime() + " filtering and pairing reads")
+	# # filter_pair_reads(combined_bwa_filename, mapq, paired_filename, qc_filename)
+	# 
+	# 
+	# #print(time.ctime() + " paired bam file generated. Calling fixmate")
+	# #print(paired_filename)
+	# print(os.path.isfile(paired_filename + ".bam")) 
+	# 
+	# pysam.fixmate("-m", "-@", str(threads), (paired_filename + ".bam"), (paired_filename + ".fixmated.bam"))
+	pysam.fixmate("-m", "-@", str(threads), (combined_bwa_filename), (paired_filename + ".fixmated.bam"))
 	print(time.ctime() + " sorting by coordinates.")
 	pysam.sort("-o", paired_filename + ".srt.bam", "-@", str(threads), paired_filename + ".fixmated.bam")
 	print(time.ctime() + " calling samtools markdup")
-	#pysam.rmdup(paired_filename + ".srt.bam", paired_filename + ".rmdup.bam")
+	# #pysam.rmdup(paired_filename + ".srt.bam", paired_filename + ".rmdup.bam")
+	
 	proc = subprocess.Popen(" ".join(["samtools markdup", "-r -m s -s -f", paired_filename + ".fixmated.markdup.stats", "-@", str(threads), "-d", str(optical_duplicate_distance), paired_filename + ".srt.bam", paired_filename + ".rmdup.bam"]), shell = True)
 	proc.communicate()
-	#proc = subprocess.Popen(["samtools", "rmdup", paired_filename + ".srt.bam", paired_filename + ".rmdup.bam"])
-	#proc.communicate()
-	print(time.ctime() + " calling samtools flagstat on mapped file")
-	proc = subprocess.Popen("samtools flagstat " + paired_filename + ".srt.bam > " + paired_filename + ".srt.bam.flagstat", 
-				shell = True)
-	proc.communicate()
-	with open(paired_filename + ".srt.bam.flagstat") as flag_file:
-		lines = flag_file.readlines()
-		uniquely_mapped_count = lines[7].split()[0]
+	
+	# #proc = subprocess.Popen(["samtools", "rmdup", paired_filename + ".srt.bam", paired_filename + ".rmdup.bam"])
+	# #proc.communicate()
+	
+	# print(time.ctime() + " calling samtools flagstat on mapped file")
+	# proc = subprocess.Popen("samtools flagstat " + paired_filename + ".srt.bam > " + paired_filename + ".srt.bam.flagstat", 
+	# 			shell = True)
+	# proc.communicate()
+	# with open(paired_filename + ".srt.bam.flagstat") as flag_file:
+	# 	lines = flag_file.readlines()
+	# 	uniquely_mapped_count = lines[7].split()[0]
 	print(time.ctime() + " calling samtools flagstat on mapped and duplicate-removed file")
-	proc = subprocess.Popen("samtools flagstat " + paired_filename + ".rmdup.bam > " + paired_filename + ".rmdup.flagstat", 
+	proc = subprocess.Popen("samtools flagstat " + paired_filename + ".rmdup.bam > " + paired_filename + ".rmdup.flagstat",
 				shell = True)
 	proc.communicate()
-	with open(paired_filename + ".rmdup.flagstat") as flag_file:
-		lines = flag_file.readlines()
-		duprmd_count = lines[7].split()[0]
-		intra_count = lines[11].split()[0]
-		intra_count = str(int(float(intra_count)) / 2)
-	print(time.ctime() + " calling samtools sort for sorting by query names")
-	#pysam.sort("-n", "-o", bwa_filename + ".srtn.rmdup.bam", paired_filename + ".rmdup.bam")
-	pysam.sort("-o", paired_filename + ".srtn.rmdup.bam", 
+	# with open(paired_filename + ".rmdup.flagstat") as flag_file:
+	# 	lines = flag_file.readlines()
+	# 	duprmd_count = lines[7].split()[0]
+	# 	intra_count = lines[11].split()[0]
+	# 	intra_count = str(int(float(intra_count)) / 2)
+	# print(time.ctime() + " calling samtools sort for sorting by query names")
+	
+	# #pysam.sort("-n", "-o", bwa_filename + ".srtn.rmdup.bam", paired_filename + ".rmdup.bam")
+	
+	pysam.sort("-o", paired_filename + ".srtn.rmdup.bam",
 				"-@", str(threads), "-n", paired_filename + ".rmdup.bam")
-	#proc.communicate()
-	#proc.wait()
-	print(time.ctime() + " finishing filtering")
-	qc_filename = outdir + "/" + prefix + ".feather.qc"
-	with open(qc_filename, 'w') as outfile:
-		outfile.write("{0:70} {1}".format("number of sequencing pairs", str(read_count)))
-		outfile.write("{0:70} {1} ".format("number of uniquely mapped pairs (MAPQ >= " + str(mapq) + ")", str(uniquely_mapped_count)))
-		outfile.write("\t({0:.2f}%)\n".format(100 * (int(float(uniquely_mapped_count)) / int(float(read_count)))))
-		outfile.write("{0:70} {1} ".format("number of pairs after duplicate removal", str(duprmd_count)))
-		outfile.write("\t({0:.2f}%)\n".format(100 * (int(float(duprmd_count)) / int(float(read_count)))))
-		#outfile.write("{0:70} {1} ".format("number of interchromosomal pairs", str(intra_count)))
-		#outfile.write("\t({0:.2f}%)\n".format(100 * int(float(intra_count)) / int(float(read_count))))
+	# #proc.communicate()
+	# #proc.wait()
+	# print(time.ctime() + " finishing filtering")
+	# qc_filename = outdir + "/" + prefix + ".feather.qc"
+	# with open(qc_filename, 'w') as outfile:
+	# 	outfile.write("{0:70} {1}".format("number of sequencing pairs", str(read_count)))
+	# 	outfile.write("{0:70} {1} ".format("number of uniquely mapped pairs (MAPQ >= " + str(mapq) + ")", str(uniquely_mapped_count)))
+	# 	outfile.write("\t({0:.2f}%)\n".format(100 * (int(float(uniquely_mapped_count)) / int(float(read_count)))))
+	# 	outfile.write("{0:70} {1} ".format("number of pairs after duplicate removal", str(duprmd_count)))
+	# 	outfile.write("\t({0:.2f}%)\n".format(100 * (int(float(duprmd_count)) / int(float(read_count)))))
+	# 	#outfile.write("{0:70} {1} ".format("number of interchromosomal pairs", str(intra_count)))
+	# 	#outfile.write("\t({0:.2f}%)\n".format(100 * int(float(intra_count)) / int(float(read_count))))
 	return (paired_filename + ".srtn.rmdup.bam")
 
 def is_sorted_queryname(header):
@@ -180,7 +210,7 @@ def set_filenames(fastq1, fastq2, outdir, prefix):
 	paired_filename = outdir + "/" + prefix + ".paired"
 	if fastq1.endswith(".fastq") or fastq1.endswith(".fastq.gz") or fastq1.endswith(".fq") or fastq1.endswith(".fq.gz"):
 		fastq1_prefix = fastq1[ (fastq1.rfind("/") + 1) : ]
-		bwa1_filename = tempdir + "/" + fastq1_prefix + ".bwa.sam"
+		bwa1_filename = tempdir + "/" + fastq1_prefix + ".sam"
 		bwa1_sorted_filename = bwa1_filename + ".srtn"
 	elif fastq1.endswith(".sam") or fastq1.endswith(".bam"):
 		setname = fastq1[ (fastq1.rfind("/") + 1) : ]
@@ -206,12 +236,15 @@ def set_tempfile(input_content = None, output_content = None, binary = True):
 	return(tfile)
 		
 
-def bwa_mem(fastq, bwa_index, threads, output_filename):
-	print(time.ctime() + " calling bwa for " + fastq)
-	output_file = open(output_filename, "w")
-	proc = subprocess.Popen(["bwa", "mem", "-t", str(threads), bwa_index, fastq], stdout = output_file, stderr = open(output_filename + ".log", 'w'))
+def bwa_mem(fastq1,fastq2, bwa_index,bwa_index_fa, chromap_loc, threads, output_filename):
+	print(time.ctime() + " calling chromap for " + fastq1 + fastq2)
+	#output_file = open(output_filename, "w")
+	#proc = subprocess.Popen(["bwa", "mem", "-t", str(threads), bwa_index, fastq], stdout = output_file, stderr = open(output_filename + ".log", 'w'))
+	print(chromap_loc,"--preset","hic","-t",str(threads), "-x", bwa_index,"-r" , bwa_index_fa, "-1" ,fastq1,"-2" ,fastq2,"--SAM", "-o",output_filename)
+	#proc = subprocess.Popen(["/home/mishras10/chromap/chromap", "-x", "/home/mishras10/mm10.index","-r" , bwa_index, "-1" ,fastq,"--SAM", "-o",output_filename], stderr = open(output_filename + ".log", 'w'))
+	proc = subprocess.Popen([chromap_loc,"--preset","hic","-t",str(threads), "-x", bwa_index,"-r" , bwa_index_fa, "-1" ,fastq1,"-2" ,fastq2,"--SAM", "-o",output_filename], stderr = open(output_filename + ".log", 'w'))
 	proc.wait()
-	output_file.close()
+	#output_file.close()
 
 def select_valid_pair(aligned_reads, count, chr_count):
 	if (chr_count == 1):

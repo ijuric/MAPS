@@ -102,7 +102,16 @@ dataset_length = dataset_length_and + dataset_length_xor
 ## doing statistics and resampling
 
 pospoisson_regression <- function(mm, dataset_length) {
+    # if (nrow(mm)<ncol(mm))
+    # {
+    #     mm1 =  mm[1:4,]
+    #     mm = rbind(mm,mm1)
+    #     
+    # }
+    # mm$logShortCount = mm$logShortCount+ 0.001 + ( rnorm(n=length(mm$logShortCount), sd=0.005))
+    #print(mm)
     fit <- vglm(count ~ logl + loggc + logm + logdist + logShortCount, family = pospoisson(), data = mm)
+    #print(fit)
     mm$expected = fitted(fit)
     mm$p_val = ppois(mm$count, mm$expected, lower.tail = FALSE, log.p = FALSE) / ppois(0, mm$expected, lower.tail = FALSE, log.p = FALSE)
     m1 = mm[ mm$p_val > 1/length(mm$p_val),]

@@ -1,0 +1,33 @@
+Start to map reads.
+Parameters: error threshold: 8, min-num-seeds: 2, max-seed-frequency: 500,1000, max-num-best-mappings: 1, max-insert-size: 1000, MAPQ-threshold: 30, min-read-length: 30, bc-error-threshold: 1, bc-probability-threshold: 0.90
+Number of threads: 4
+Analyze bulk data.
+Won't try to remove adapters on 3'.
+Won't remove PCR duplicates after mapping.
+Will remove PCR duplicates at bulk level.
+Won't allocate multi-mappings after mapping.
+Only output unique mappings after mapping.
+Only output mappings of which barcodes are in whitelist.
+Output mappings in SAM format.
+Reference file: /home/mishras10/mm10.fa
+Index file: /home/mishras10/mm10.index
+1th read 1 file: /home/mishras10/MAPS/examples/test_set1/test_set1_R1.fastq
+Output file: /home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_20230509_153452/tempfiles/test_set1_R1.fastq.bwa.sam
+Loaded all sequences successfully in 3.14s, number of sequences: 66, number of bases: 2730871774.
+Kmer size: 17, window size: 7.
+Lookup table size: 370040657, occurrence table size: 382010151.
+Loaded index successfully in 9.48s.
+Loaded 103072 reads in 0.09s.
+No more reads.
+Mapped in 2.24s.
+Mapped all reads in 2.36s.
+Number of reads: 103072.
+Number of mapped reads: 69341.
+Number of uniquely mapped reads: 64207.
+Number of reads have multi-mappings: 5134.
+Number of candidates: 4428881.
+Number of mappings: 69341.
+Number of uni-mappings: 64207.
+Number of multi-mappings: 5134.
+Number of output mappings (passed filters): 56514
+Total time: 17.01s.

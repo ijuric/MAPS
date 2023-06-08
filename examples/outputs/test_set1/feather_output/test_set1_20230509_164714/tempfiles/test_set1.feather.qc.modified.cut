@@ -1,0 +1,11 @@
+number_of_sequencing_pairs	56514
+number_of_uniquely_mapped_pairs_(MAPQ_>=_30)	57774
+number_of_pairs_after_duplicate_removal	56146
+number_of_intrachromosomal_pairs	25812
+number_of_short-range_intrachromosomal_pairs	5104
+number_of_short-range_vip_pairs	4782
+number_of_long-range_intrachromosomal_pairs	20708
+number_of_interchromosomal_pairs	2252
+trans_read_ratio	0.04011
+long_cis_read_ratio	0.80226
+FRiP	0.19197

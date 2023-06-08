@@ -1,0 +1,11 @@
+number of sequencing pairs                                             103072
+number of uniquely mapped pairs (MAPQ >= 30)                           152986 	(148.43%)
+number of pairs after duplicate removal                                148888 	(144.45%)
+number of intrachromosomal pairs                                       68578 	(92.12%)
+number of short-range intrachromosomal pairs                           20429 	(27.44%)
+number of short-range vip pairs                                        19539 	(26.25%)
+number of long-range intrachromosomal pairs                            48149 	(64.68%)
+number of interchromosomal pairs                                       5829 	(7.83%)
+trans read ratio                                                      0.03915 	(3.92%)
+long cis read ratio                                                   0.70211 	(70.21%)
+FRiP                                                                  0.19464 	(19.46%)

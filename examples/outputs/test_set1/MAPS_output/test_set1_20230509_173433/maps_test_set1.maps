@@ -1,0 +1,12 @@
+DATASET_NAME=test_set1
+OUT_DIR=/home/mishras10/MAPS/examples/outputs/test_set1/MAPS_output/test_set1_20230509_173433/
+MACS2_PATH=/home/mishras10/MAPS/examples/test_set1/macs2_peaks_final.replicated.narrowPeak
+GF_PATH=/home/mishras10/MAPS/bin/../MAPS_data_files/mm10/genomic_features/F_GC_M_MboI_10Kb_el.mm10.txt
+LONG_PATH=/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_current/
+LONG_FORMAT=[DATASET_NAME].[CHROMOSOME].long.intra.bedpe
+SHORT_PATH=/home/mishras10/MAPS/examples/outputs/test_set1/feather_output/test_set1_current/
+SHORT_FORMAT=[DATASET_NAME].[CHROMOSOME].shrt.vip.bed
+BIN_SIZE=10000
+BINNING_RANGE=1000000
+N_CHROMS=19
+SEX_CHROMS=X
